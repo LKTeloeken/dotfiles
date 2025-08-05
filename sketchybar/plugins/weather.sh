@@ -1,55 +1,58 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
-IP=$(curl -s https://ipinfo.io/ip)
-LOCATION_JSON=$(curl -s https://ipinfo.io/$IP/json)
+# Source colors for consistent theming
+source "$CONFIG_DIR/colors.sh"
 
-LOCATION="$(echo $LOCATION_JSON | jq '.city' | tr -d '"')"
-REGION="$(echo $LOCATION_JSON | jq '.region' | tr -d '"')"
-COUNTRY="$(echo $LOCATION_JSON | jq '.country' | tr -d '"')"
+# Cache file for weather data
+CACHE_FILE="/tmp/sketchybar_weather_cache"
+CACHE_DURATION=1800  # 30 minutes
 
-# Line below replaces spaces with +
-LOCATION_ESCAPED="${LOCATION// /+}+${REGION// /+}"
-WEATHER_JSON=$(curl -s "https://wttr.in/$LOCATION_ESCAPED?format=j1")
+# Function to get weather data
+get_weather() {
+    # You can replace this with your preferred weather API
+    # For now, using a simple placeholder
+    local ip=$(curl -s https://ipinfo.io/ip)
+    local location_json=$(curl -s https://ipinfo.io/$IP/json)
 
-# Fallback if empty
-if [ -z $WEATHER_JSON ]; then
+    local location=$(echo $location_json | jq -r '.city')
+    local region=$(echo $LOCATION_JSON | jq -r '.region')
 
-    sketchybar --set $NAME label=$LOCATION
-    sketchybar --set $NAME.moon icon=
+    local localtion_escaped="${LOCATION// /+}+${REGION// /+}"
+    
+    # Try to get weather from wttr.in (simple text-based weather)
+    local weather_data=$(curl -s "https://wttr.in/$localtion_escaped?format=3")
+    
+    if [ -n "$weather_data" ]; then
+        echo "$weather_data"
+    else
+        echo "Weather unavailable"
+    fi
+}
 
-    return
+# Check if cache is valid
+if [ -f "$CACHE_FILE" ]; then
+    cache_time=$(stat -f %m "$CACHE_FILE" 2>/dev/null || echo 0)
+    current_time=$(date +%s)
+    
+    if [ $((current_time - cache_time)) -lt $CACHE_DURATION ]; then
+        weather=$(cat "$CACHE_FILE")
+    else
+        weather=$(get_weather)
+        echo "$weather" > "$CACHE_FILE"
+    fi
+else
+    weather=$(get_weather)
+    echo "$weather" > "$CACHE_FILE"
 fi
 
-TEMPERATURE=$(echo $WEATHER_JSON | jq '.current_condition[0].temp_C' | tr -d '"')
-WEATHER_DESCRIPTION=$(echo $WEATHER_JSON | jq '.current_condition[0].weatherDesc[0].value' | tr -d '"' | sed 's/\(.\{25\}\).*/\1.../')
-MOON_PHASE=$(echo $WEATHER_JSON | jq '.weather[0].astronomy[0].moon_phase' | tr -d '"')
-
-case ${MOON_PHASE} in
-"New Moon")
-    ICON=
-    ;;
-"Waxing Crescent")
-    ICON=
-    ;;
-"First Quarter")
-    ICON=
-    ;;
-"Waxing Gibbous")
-    ICON=
-    ;;
-"Full Moon")
-    ICON=
-    ;;
-"Waning Gibbous")
-    ICON=
-    ;;
-"Last Quarter")
-    ICON=
-    ;;
-"Waning Crescent")
-    ICON=
-    ;;
-esac
-
-sketchybar --set $NAME label=" $TEMPERATURE℃ $WEATHER_DESCRIPTION"
-sketchybar --set $NAME.moon icon=$ICON
+# Extract temperature and condition
+if [[ "$weather" =~ ([0-9.-]+°[CF]) ]]; then
+    temp="${BASH_REMATCH[1]}"
+    sketchybar --set "$NAME" label="$temp" \
+                            icon.color=$BLUE \
+                            label.color=$WHITE
+else
+    sketchybar --set "$NAME" label="$temp" \
+                            icon.color=$GREY \
+                            label.color=$GREY
+fi
