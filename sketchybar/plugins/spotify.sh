@@ -1,9 +1,12 @@
 #!/usr/bin/env zsh
 
+# Source colors for consistent theming
+source "$CONFIG_DIR/colors.sh"
+
 # Max number of characters so it fits nicely to the right of the notch
 # MAY NOT WORK WITH NON-ENGLISH CHARACTERS
 
-MAX_LENGTH=35
+MAX_LENGTH=15
 
 # Logic starts here, do not modify
 HALF_LENGTH=$(((MAX_LENGTH + 1) / 2))
@@ -14,7 +17,7 @@ SPOTIFY_JSON="$INFO"
 update_track() {
 
     if [[ -z $SPOTIFY_JSON ]]; then
-        sketchybar --set $NAME background.color=0xffeed49f label.drawing=no
+        sketchybar --set $NAME icon.color=0xffeed49f label.drawing=no
         return
     fi
 
@@ -44,14 +47,23 @@ update_track() {
                 ARTIST="${ARTIST:0:$((MAX_LENGTH - TRACK_LENGTH - 1))}…"
             fi
         fi
-        sketchybar --set $NAME label="${TRACK}  ${ARTIST}" label.drawing=yes background.color=0xffa6da95
+        sketchybar --set $NAME label="${TRACK} | ${ARTIST}" \
+				label.drawing=yes \
+				icon="󰓇" \
+				icon.color=$ACCENT_SECONDARY \
+				label.color=$WHITE 
 
     elif [ $PLAYER_STATE = "Paused" ]; then
-        sketchybar --set $NAME background.color=0xffeed49f
+        sketchybar --set "$NAME" drawing=on \
+			icon="󰏤" \
+			icon.color=$ACCENT_TERTIARY \
+			label="Paused" \
+			label.color=$WHITE \
+			label.font="SF Pro:Medium:12.0"
     elif [ $PLAYER_STATE = "Stopped" ]; then
-        sketchybar --set $NAME background.color=0xffeed49f label.drawing=no
+        sketchybar --set $NAME icon.color=0xffeed49f label.drawing=no
     else
-        sketchybar --set $NAME background.color=0xffeed49f
+        sketchybar --set $NAME icon.color=0xffeed49f
     fi
 }
 

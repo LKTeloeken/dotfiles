@@ -7,9 +7,10 @@ source "$CONFIG_DIR/colors.sh"
 source "$CONFIG_DIR/icons.sh"
 
 PLUGIN_DIR="$CONFIG_DIR/plugins"
+SPOTIFY_EVENT="com.spotify.client.PlaybackStateChanged"
 
 ##### Bar Appearance #####
-sketchybar --bar position=top height=42 \
+sketchybar --bar position=top height=40 \
                  color=$BAR_COLOR \
                  border_width=0 \
                  corner_radius=0 \
@@ -195,20 +196,21 @@ sketchybar --add item bluetooth right \
                           padding_right=4
 
 # Now Playing
-sketchybar --add item now_playing right \
-           --set now_playing icon.font="SF Pro:Semibold:15.0" \
-                            icon.padding_left=8 \
-                            icon.padding_right=6 \
-                            label.font="SF Pro:Medium:12.0" \
-                            label.padding_left=4 \
-                            label.padding_right=8 \
-                            update_freq=2 \
-                            script="$PLUGIN_DIR/now_playing.sh" \
-                            background.color=$BACKGROUND_1 \
-                            background.drawing=on \
-                            drawing=off \
-                            padding_left=4 \
-                            padding_right=4
+sketchybar --add event spotify_change $SPOTIFY_EVENT \
+            --add item now_playing right \
+            --set now_playing icon.font="SF Pro:Semibold:15.0" \
+                        icon.padding_left=8 \
+                        icon.padding_right=6 \
+                        label.font="SF Pro:Medium:12.0" \
+                        label.padding_left=4 \
+                        label.padding_right=8 \
+                        updates=on \
+                        script="$PLUGIN_DIR/spotify.sh" \
+                        background.color=$BACKGROUND_1 \
+                        background.drawing=on \
+                        padding_left=4 \
+                        padding_right=4 \
+            --subscribe now_playing spotify_change mouse.clicked
 
 # Volume
 sketchybar --add item volume right \
