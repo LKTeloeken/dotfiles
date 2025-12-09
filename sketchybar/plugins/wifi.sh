@@ -40,7 +40,7 @@ fi
 if [[ "$WIFI_CONNECTED" == true ]]; then
     # WiFi is connected - green icon
     ICON="󰤨"
-    COLOR=$ACCENT_SECONDARY  # Green
+    COLOR=$BLUE  # Green
 else
     # WiFi is disconnected - gray icon
     ICON="󰤭"
@@ -48,6 +48,10 @@ else
 fi
 
 # Update the WiFi item - icon only, no label
-sketchybar --set "$NAME" icon="$ICON" \
-                        icon.color="$COLOR" \
-                        label.drawing=off
+sketchybar --set "$NAME" \
+    icon="$ICON" \
+    icon.color="$COLOR" \
+    icon.padding_left=10 \
+    icon.padding_right=7 \
+    label="" \
+    label.padding_right=0
