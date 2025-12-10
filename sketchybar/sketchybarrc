@@ -6,6 +6,7 @@
 # https://github.com/FelixKratz/dotfiles
 
 PLUGIN_DIR="$CONFIG_DIR/plugins"
+SPOTIFY_EVENT="com.spotify.client.PlaybackStateChanged"
 
 # Load colors
 source "$CONFIG_DIR/colors.sh"
@@ -82,30 +83,6 @@ for sid in 1 2 3 4 5 6; do
     script="$CONFIG_DIR/plugins/aerospace.sh $sid"
 done
 
-##### Adding Left Items #####
-# We add some regular items to the left side of the bar, where
-# only the properties deviating from the current defaults need to be set
-
-# sketchybar --add item chevron left \
-#   --set chevron icon= label.drawing=off \
-#   --add item front_app left \
-#   --set front_app icon.drawing=off label.drawing=on script="$PLUGIN_DIR/front_app.sh" \
-#   --subscribe front_app front_app_switched \
-#   --add item front_app_layout left \
-#   --set front_app_layout \
-#   icon.drawing=on \
-#   icon.font="Hack Nerd Font:Regular:11.0" \
-#   icon.color=$GREEN \
-#   icon.padding_left=6 \
-#   icon.padding_right=6 \
-#   label.drawing=off \
-#   background.drawing=on \
-#   background.color=$GREY_TRANSP \
-#   background.corner_radius=4 \
-#   background.height=16 \
-#   script="$PLUGIN_DIR/front_app.sh" \
-#   --subscribe front_app_layout front_app_switched aerospace_mode_changed
-
 ##### Adding Right Items #####
 # In the same way as the left items we can add items to the right side.
 # Additional position (e.g. center) are available, see:
@@ -122,25 +99,6 @@ sketchybar --add item clock right \
   --add item battery right \
   --set battery update_freq=120 icon.drawing=on icon.font="Hack Nerd Font:Regular:14.0" script="$PLUGIN_DIR/battery.sh" \
   --subscribe battery system_woke power_source_change \
-  --add item calendar_event right \
-  --set calendar_event \
-  update_freq=60 \
-  script="$PLUGIN_DIR/calendar_event.sh" \
-  click_script="open -a Calendar" \
-  icon.font="Hack Nerd Font:Regular:14.0" \
-  label.color="$WHITE" \
-  background.drawing=on \
-  background.color="$GREY_TRANSP" \
-  background.corner_radius=8 \
-  background.height=25 \
-  --add item things_todo right \
-  --set things_todo update_freq=60 \
-  script="$PLUGIN_DIR/things_todo.sh" \
-  click_script="open -a Things3" \
-  background.drawing=on \
-  background.color=$GREY_TRANSP \
-  background.corner_radius=8 \
-  background.height=25 \
   --add item wifi right \
   --set wifi \
   update_freq=10 \
@@ -149,8 +107,38 @@ sketchybar --add item clock right \
   background.drawing=on \
   background.color="$GREY_TRANSP" \
   background.corner_radius=8 \
-  background.height=25
-
+  background.height=25 \
+  --add item bluetooth right \
+  --set bluetooth \
+  update_freq=10 \
+  script="$PLUGIN_DIR/bluetooth.sh" \
+  icon.font="SF Pro:Semibold:15.0"  \
+  background.drawing=on \
+  background.color="$GREY_TRANSP" \
+  background.corner_radius=8 \
+  background.height=25 \
+  --add item volume right \
+  --set volume \
+  update_freq=10 \
+  script="$PLUGIN_DIR/volume.sh" \
+  icon.font="SF Pro:Semibold:15.0"  \
+  background.drawing=on \
+  background.color="$GREY_TRANSP" \
+  background.corner_radius=8 \
+  background.height=25 \
+  --subscribe volume volume_change \
+  --add item now_playing right \
+  --add event spotify_change $SPOTIFY_EVENT \
+  --set now_playing \
+  update_freq=1 \
+  updates=on \
+  script="$PLUGIN_DIR/now_playing.sh" \
+  icon.font="SF Pro:Semibold:15.0"  \
+  background.drawing=on \
+  background.color="$GREY_TRANSP" \
+  background.corner_radius=8 \
+  background.height=25 \
+  --subscribe now_playing spotify_change mouse.clicked
 
 ##### Force all scripts to run the first time (never do this in a script) #####
 sketchybar --update

@@ -40,7 +40,7 @@ fi
 if [[ "$WIFI_CONNECTED" == true ]]; then
     # WiFi is connected - green icon
     ICON="󰤨"
-    COLOR=$BLUE  # Green
+    COLOR=$MAGENTA  # Green
 else
     # WiFi is disconnected - gray icon
     ICON="󰤭"
