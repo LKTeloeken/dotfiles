@@ -51,7 +51,5 @@ fi
 sketchybar --set "$NAME" \
     icon="$ICON" \
     icon.color="$COLOR" \
-    icon.padding_left=10 \
-    icon.padding_right=7 \
     label="" \
     label.padding_right=0

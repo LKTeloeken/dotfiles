@@ -103,18 +103,22 @@ sketchybar --add item clock right \
   --set wifi \
   update_freq=10 \
   script="$PLUGIN_DIR/wifi.sh" \
+  icon="󱛇" \
+  icon.color=$GREY \
   icon.font="SF Pro:Semibold:15.0"  \
   background.drawing=on \
-  background.color="$GREY_TRANSP" \
+  background.color="$TRANSPARENT" \
   background.corner_radius=8 \
   background.height=25 \
+  label.padding_right=0 \
+  label.drawing=off \
   --add item bluetooth right \
   --set bluetooth \
   update_freq=10 \
   script="$PLUGIN_DIR/bluetooth.sh" \
   icon.font="SF Pro:Semibold:15.0"  \
   background.drawing=on \
-  background.color="$GREY_TRANSP" \
+  background.color="$TRANSPARENT" \
   background.corner_radius=8 \
   background.height=25 \
   --add item volume right \
@@ -123,7 +127,7 @@ sketchybar --add item clock right \
   script="$PLUGIN_DIR/volume.sh" \
   icon.font="SF Pro:Semibold:15.0"  \
   background.drawing=on \
-  background.color="$GREY_TRANSP" \
+  background.color="$TRANSPARENT" \
   background.corner_radius=8 \
   background.height=25 \
   --subscribe volume volume_change \
@@ -135,7 +139,7 @@ sketchybar --add item clock right \
   script="$PLUGIN_DIR/now_playing.sh" \
   icon.font="SF Pro:Semibold:15.0"  \
   background.drawing=on \
-  background.color="$GREY_TRANSP" \
+  background.color="$TRANSPARENT" \
   background.corner_radius=8 \
   background.height=25 \
   --subscribe now_playing spotify_change mouse.clicked
