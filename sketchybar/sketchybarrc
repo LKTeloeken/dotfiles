@@ -1,148 +1,105 @@
-#!/bin/bash
-
-# This is a demo config to showcase some of the most important commands.
-# It is meant to be changed and configured, as it is intentionally kept sparse.
-# For a (much) more advanced configuration example see my dotfiles:
-# https://github.com/FelixKratz/dotfiles
-
 PLUGIN_DIR="$CONFIG_DIR/plugins"
-SPOTIFY_EVENT="com.spotify.client.PlaybackStateChanged"
 
-# Load colors
-source "$CONFIG_DIR/colors.sh"
+# Catppuccin Mocha palette
+# Base:    0xff1e1e2e
+# Mantle:  0xff181825
+# Surface: 0xff313244
+# Mauve:   0xffcba6f7
+# Text:    0xffcdd6f4
+# Subtext: 0xffa6adc8
+# Overlay: 0xff6c7086
 
-##### Bar Appearance #####
-# Configuring the general appearance of the bar.
-# These are only some of the options available. For all options see:
-# https://felixkratz.github.io/SketchyBar/config/bar
-# If you are looking for other colors, see the color picker:
-# https://felixkratz.github.io/SketchyBar/config/tricks#color-picker
+# General Bar Properties
+sketchybar --bar position=top \
+               height=43 \
+               blur_radius=30 \
+               color=0x00000000 \
+               display=main \
+               topmost=window \
+               y_offset=5 \
+               margin=-10 
 
-sketchybar --bar position=top height=36 blur_radius=30 color=$BAR_COLOR
-
-##### Changing Defaults #####
-# We now change some default values, which are applied to all further items.
-# For a full list of all available item properties see:
-# https://felixkratz.github.io/SketchyBar/config/items
-
-default=(
-  padding_left=0
-  padding_right=0
-  icon.font="Hack Nerd Font:Regular:14.0"
-  label.font="SF Pro:Semibold:14.0"
-  icon.color=$WHITE
-  label.color=$WHITE
-  icon.padding_left=10
-  icon.padding_right=10
-  label.padding_left=0
-  label.padding_right=10
-  background.padding_left=4
-  background.padding_right=4
-)
-sketchybar --default "${default[@]}"
+# Item Defaults
+sketchybar --default \
+           padding_left=4 \
+           padding_right=4 \
+           icon.font="sketchybar-app-font:Regular:16.0" \
+           label.font="CaskaydiaCove Nerd Font:Bold:14.0" \
+           icon.color=0xffcba6f7 \
+           label.color=0xffcba6f7 \
+           icon.padding_left=10 \
+           icon.padding_right=4 \
+           label.padding_left=6 \
+           label.padding_right=10 \
+           background.color=0xcc1e1e2e \
+           background.border_color=0x44cba6f7 \
+           background.border_width=1 \
+           background.corner_radius=8 \
+           background.height=30 \
+           blur_radius=30
 
 sketchybar --add event aerospace_workspace_change
 sketchybar --add event aerospace_mode_changed
 
-# Simple numeric labels for workspaces
-SPACE_ICONS=("1" "2" "3" "4" "5" "6")
+# --- Items on the right ---
+# Date and time
+sketchybar --add item date right \
+           --set date icon=􀧞 \
+                      icon.color=0xffcba6f7 \
+                      label.color=0xffcdd6f4 \
+                       update_freq=5 \
+                      script="$PLUGIN_DIR/date.sh"
 
-for sid in 1 2 3 4 5 6; do
-  # Determine icon based on workspace ID
-  space_icon=""
-  case "$sid" in
-  1) space_icon="1" ;;
-  2) space_icon="2" ;;
-  3) space_icon="3" ;;
-  4) space_icon="4" ;;
-  5) space_icon="5" ;;
-  *) space_icon="6" ;;
-  esac
+# Battery level
+sketchybar --add item battery right \
+           --set battery icon.color=0xffcba6f7 \
+                         label.color=0xffcdd6f4 \
+                         update_freq=10 \
+                         script="$PLUGIN_DIR/battery.sh" \
+           --subscribe battery system_woke power_source_change
 
+# Volume level
+sketchybar --add item volume right \
+           --set volume icon.color=0xffcba6f7 \
+                        label.color=0xffcdd6f4 \
+                        script="$PLUGIN_DIR/volume.sh" \
+           --subscribe volume volume_change
+
+# Media (Spotify/Music)
+source "$CONFIG_DIR/items/media.sh"
+
+# --- Items on the left ---
+# Space indicators
+# Space indicators
+SPACE_SIDS=(1 2 3 4 5 6)
+for sid in "${SPACE_SIDS[@]}"; do
   sketchybar --add item space.$sid left \
-    --subscribe space.$sid aerospace_workspace_change \
-    --set space.$sid \
-    background.color=$ACCENT_TRANSPARENT \
-    background.corner_radius=5 \
-    background.height=25 \
-    background.drawing=off \
-    background.padding_left=1 \
-    background.padding_right=1 \
-    border.color=$MAGENTA \
-    border.width=0 \
-    y_offset=1 \
-    icon="$space_icon" \
-    icon.font="SF Pro:Bold:16.0" \
-    icon.color=$GREY \
-    icon.highlight_color=$ACCENT \
-    label.drawing=off \
-    label.color=$GREY \
-    label.font="sketchybar-app-font:Regular:14.0" \
-    label.y_offset=-1 \
-    click_script="aerospace workspace $sid" \
-    script="$CONFIG_DIR/plugins/aerospace.sh $sid"
+             --subscribe space.$sid aerospace_workspace_change \
+             --set space.$sid \
+                     icon=$sid \
+                     label.font="CaskaydiaCove Nerd Font:Bold:18.0" \
+                     icon.font="CaskaydiaCove Nerd Font:Bold:16.0" \
+                     font_smoothing=on \
+                     label.y_offset=0 \
+                     label.padding_right=1 \
+                     label.color=0xffcba6f7 \
+                     icon.color=0xffcba6f7 \
+                     background.color=0xcc1e1e2e \
+                     background.border_color=0x44cba6f7 \
+                     background.border_width=1 \
+                     click_script="aerospace workspace $sid" \
+                     script="$PLUGIN_DIR/space.sh $sid"
 done
 
-##### Adding Right Items #####
-# In the same way as the left items we can add items to the right side.
-# Additional position (e.g. center) are available, see:
-# https://felixkratz.github.io/SketchyBar/config/items#adding-items-to-sketchybar
+# Front app
+sketchybar --add item front_app left \
+           --set front_app icon.font="sketchybar-app-font:Regular:18.0" \
+                           icon.color=0xffcba6f7 \
+                           label.color=0xffcdd6f4 \
+                           background.color=0xcc313244 \
+                           background.border_color=0x88cba6f7 \
+                           background.border_width=1 \
+                           script="$PLUGIN_DIR/front_app.sh" \
+           --subscribe front_app front_app_switched
 
-# Some items refresh on a fixed cycle, e.g. the clock runs its script once
-# every 10s. Other items respond to events they subscribe to, e.g. the
-# volume.sh script is only executed once an actual change in system audio
-# volume is registered. More info about the event system can be found here:
-# https://felixkratz.github.io/SketchyBar/config/events
-
-sketchybar --add item clock right \
-  --set clock update_freq=10 icon= script="$PLUGIN_DIR/clock.sh" \
-  --add item battery right \
-  --set battery update_freq=120 icon.drawing=on icon.font="Hack Nerd Font:Regular:14.0" script="$PLUGIN_DIR/battery.sh" \
-  --subscribe battery system_woke power_source_change \
-  --add item wifi right \
-  --set wifi \
-  update_freq=10 \
-  script="$PLUGIN_DIR/wifi.sh" \
-  icon="󱛇" \
-  icon.color=$GREY \
-  icon.font="SF Pro:Semibold:15.0"  \
-  background.drawing=on \
-  background.color="$TRANSPARENT" \
-  background.corner_radius=8 \
-  background.height=25 \
-  label.padding_right=0 \
-  label.drawing=off \
-  --add item bluetooth right \
-  --set bluetooth \
-  update_freq=10 \
-  script="$PLUGIN_DIR/bluetooth.sh" \
-  icon.font="SF Pro:Semibold:15.0"  \
-  background.drawing=on \
-  background.color="$TRANSPARENT" \
-  background.corner_radius=8 \
-  background.height=25 \
-  --add item volume right \
-  --set volume \
-  update_freq=10 \
-  script="$PLUGIN_DIR/volume.sh" \
-  icon.font="SF Pro:Semibold:15.0"  \
-  background.drawing=on \
-  background.color="$TRANSPARENT" \
-  background.corner_radius=8 \
-  background.height=25 \
-  --subscribe volume volume_change \
-  --add item now_playing right \
-  --add event spotify_change $SPOTIFY_EVENT \
-  --set now_playing \
-  update_freq=1 \
-  updates=on \
-  script="$PLUGIN_DIR/now_playing.sh" \
-  icon.font="SF Pro:Semibold:15.0"  \
-  background.drawing=on \
-  background.color="$TRANSPARENT" \
-  background.corner_radius=8 \
-  background.height=25 \
-  --subscribe now_playing spotify_change mouse.clicked
-
-##### Force all scripts to run the first time (never do this in a script) #####
 sketchybar --update
