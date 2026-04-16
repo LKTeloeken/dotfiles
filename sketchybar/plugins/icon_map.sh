@@ -387,7 +387,7 @@ function __icon_map() {
    "Games")
         icon_result=":games:"
         ;;
-   "System Preferences" | "System Settings" | "系统设置" | "Réglages Système" | "システム設定" | "Systemeinstellungen" | "System­einstellungen")
+   "System Preferences" | "System Settings" | "系统设置" | "Réglages Système" | "システム設定" | "Systemeinstellungen" | "System­einstellungen" | "Ajustes do Sistema")
         icon_result=":gear:"
         ;;
    "Gemini" | "Google Gemini")
