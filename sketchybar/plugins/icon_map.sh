@@ -670,7 +670,7 @@ function __icon_map() {
         icon_result=":music:"
         ;;
    "octapus-db")
-        icon_result="-"
+        icon_result="󱙋"
         ;;
    "Native Access")
         icon_result=":native_instruments:"
