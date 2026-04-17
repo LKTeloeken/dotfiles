@@ -1,23 +1,24 @@
 #!/bin/sh
 
+source "$CONFIG_DIR/styles.sh"
+
 media_cover=(
   script="$PLUGIN_DIR/media.sh"
-  icon.font="sketchybar-app-font:Regular:16.0"
-  icon.color=0xffcba6f7
-  icon.padding_left=10
-  icon.padding_right=4
-  label.padding_left=6
-  label.padding_right=10
-  label.color=0xffcdd6f4
-  label.font="CaskaydiaCove Nerd Font:Bold:14.0"
+  icon.font="$FONT_ICON_DEFAULT"
+  icon.color="$DEFAULT_ICON_COLOR"
+  icon.padding_left=$ITEM_ICON_PADDING_LEFT
+  icon.padding_right=$ITEM_ICON_PADDING_RIGHT
+  label.padding_left=$ITEM_LABEL_PADDING_LEFT
+  label.padding_right=$ITEM_LABEL_PADDING_RIGHT
+  label.color="$CONTENT_LABEL_COLOR"
+  label.font="$FONT_LABEL_DEFAULT"
   label.max_chars=30
   drawing=off
   update_freq=1
-  background.color=0xcc1e1e2e
-  background.border_color=0x44cba6f7
-  background.border_width=1
-  background.corner_radius=8
-  background.height=30
+  background.color="$DEFAULT_BACKGROUND_COLOR"
+  background.border_width=$ITEM_BG_BORDER_WIDTH
+  background.corner_radius=$ITEM_BG_CORNER_RADIUS
+  background.height=$ITEM_BG_HEIGHT
 )
 
 sketchybar --add item media.cover right \
