@@ -1,11 +1,20 @@
 #!/bin/bash
 
+if [ -f "$HOME/.cache/wal/colors.sh" ]; then
+  . "$HOME/.cache/wal/colors.sh"
+  ACTIVE_COLOR="0xff${color4:1}"
+  BACKGROUND_COLOR=0x000000
+else
+  ACTIVE_COLOR=0xffc4a7e7
+  BACKGROUND_COLOR=0x000000
+fi
+
 options=(
   style=round
   width=7.5
   hidpi=on
-  active_color=0xffc4a7e7
-  background_color=0x000000
+  active_color="$ACTIVE_COLOR"
+  background_color="$BACKGROUND_COLOR"
   blacklist="Leader Key,CleanShot,Tuna"
 )
 

@@ -1,20 +1,39 @@
 #!/bin/sh
 
-# Catppuccin Mocha palette
-COLOR_TRANSPARENT=0x00000000
-COLOR_BASE=0xff1e1e2e
-COLOR_MANTLE=0xff181825
-COLOR_SURFACE=0xff313244
-COLOR_PRIMARY=0xffcba6f7
-COLOR_TEXT=0xffcdd6f4
-COLOR_SUBTEXT=0xffa6adc8
-COLOR_OVERLAY=0xff6c7086
+# Pywal / Catppuccin Mocha palette
+if [ -f "$HOME/.cache/wal/colors.sh" ]; then
+  . "$HOME/.cache/wal/colors.sh"
+  COLOR_TRANSPARENT=0x00000000
+  COLOR_BASE="0xff${background:1}"
+  COLOR_MANTLE="0xff${color0:1}"
+  COLOR_SURFACE="0xff${color8:1}"
+  COLOR_PRIMARY="0xff${color4:1}"
+  COLOR_TEXT="0xff${foreground:1}"
+  COLOR_SUBTEXT="0xff${color7:1}"
+  COLOR_OVERLAY="0xff${color8:1}"
 
-# Opacity variants
-COLOR_BASE_BG=0xcc1e1e2e
-COLOR_SURFACE_BG=0xcc313244
-COLOR_PRIMARY_BG_SOFT=0x44cba6f7
-COLOR_PRIMARY_BG_MEDIUM=0x88cba6f7
+  # Opacity variants
+  COLOR_BASE_BG="0xcc${background:1}"
+  COLOR_SURFACE_BG="0xcc${color8:1}"
+  COLOR_PRIMARY_BG_SOFT="0x44${color4:1}"
+  COLOR_PRIMARY_BG_MEDIUM="0x88${color4:1}"
+else
+  # Fallback: Catppuccin Mocha palette
+  COLOR_TRANSPARENT=0x00000000
+  COLOR_BASE=0xff1e1e2e
+  COLOR_MANTLE=0xff191927
+  COLOR_SURFACE=0xff3f3f4d
+  COLOR_PRIMARY=0xff89b4fa
+  COLOR_TEXT=0xffcdd6f4
+  COLOR_SUBTEXT=0xffa6adc8
+  COLOR_OVERLAY=0xff585b70
+
+  # Opacity variants
+  COLOR_BASE_BG=0xcc1e1e2e
+  COLOR_SURFACE_BG=0xcc3f3f4d
+  COLOR_PRIMARY_BG_SOFT=0x4489b4fa
+  COLOR_PRIMARY_BG_MEDIUM=0x8889b4fa
+fi
 
 # Shared semantic colors
 DEFAULT_ICON_COLOR="$COLOR_PRIMARY"

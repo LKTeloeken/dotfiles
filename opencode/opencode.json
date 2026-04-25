@@ -30,6 +30,13 @@
             }
         }
   },
+  "agent": {
+    "omni-v8": {
+      "description": "OMNI deep investigation agent",
+      "mode": "primary",
+      "prompt": "{file:./agents/omni-v8.agent.md}"
+    }
+  },
   "instructions": [
     "CONTRIBUTING.md",
     ".copilot/agents/*.md",
