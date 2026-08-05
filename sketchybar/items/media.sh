@@ -7,12 +7,12 @@ popup_defaults=(
   background.drawing=off
   icon.font="$FONT_SF"
   icon.color="$POPUP_ICON_COLOR"
-  icon.padding_left=10
+  icon.padding_left=$POPUP_ROW_INDENT
   icon.padding_right=6
   label.font="$FONT_LABEL_DEFAULT"
   label.color="$POPUP_LABEL_COLOR"
   label.padding_left=4
-  label.padding_right=12
+  label.padding_right=$POPUP_ROW_INDENT
 )
 
 # --- bar items ---
@@ -81,22 +81,27 @@ sketchybar --add bracket media media.art media.eq media.info \
 # Popups stack one item per row, so the transport controls are three rows
 # rather than a single line of buttons.
 
+# The image is drawn centred in the background box, so the box has to be exactly
+# the art size and carry the same left indent as the text rows below it -
+# otherwise the cover sits ~12px left of the labels.
 sketchybar --add item media.popup.art popup.media.art \
            --set media.popup.art drawing=off \
                                  icon.drawing=off \
                                  label.drawing=off \
                                  background.drawing=on \
                                  background.color="$COLOR_TRANSPARENT" \
-                                 width=$MEDIA_POPUP_ART_SIZE \
-                                 y_offset=$(( -(MEDIA_POPUP_ART_SIZE - POPUP_HEIGHT) / 2 )) \
+                                 width=$((MEDIA_POPUP_ART_SIZE + 2 * POPUP_ROW_INDENT)) \
+                                 background.padding_left=$POPUP_ROW_INDENT \
+                                 background.padding_right=$POPUP_ROW_INDENT \
                                  background.height=$MEDIA_POPUP_ART_SIZE \
+                                 background.corner_radius=$MEDIA_POPUP_ART_RADIUS \
                                  background.image.scale=0.5 \
-                                 background.image.corner_radius=8
+                                 background.image.corner_radius=$MEDIA_POPUP_ART_RADIUS
 
 sketchybar --add item media.popup.title popup.media.art \
            --set media.popup.title "${popup_defaults[@]}" \
                                    icon.drawing=off \
-                                   label.padding_left=12 \
+                                   label.padding_left=$POPUP_ROW_INDENT \
                                    label.max_chars=24
 
 sketchybar --add item media.popup.artist popup.media.art \
@@ -104,7 +109,7 @@ sketchybar --add item media.popup.artist popup.media.art \
                                     icon.drawing=off \
                                     label.font="$FONT_LABEL_SMALL" \
                                     label.color="$POPUP_SUBLABEL_COLOR" \
-                                    label.padding_left=12 \
+                                    label.padding_left=$POPUP_ROW_INDENT \
                                     label.max_chars=28
 
 sketchybar --add item media.popup.prev popup.media.art \

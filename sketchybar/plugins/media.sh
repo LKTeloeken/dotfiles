@@ -26,7 +26,7 @@ hide_widget() {
   done
   args+=(--set media background.drawing=off)
   args+=(--set media.art popup.drawing=off)
-  sketchybar -m "${args[@]}" > /dev/null 2>&1
+  sketchybar "${args[@]}" > /dev/null 2>&1
   "$CONFIG_DIR/plugins/media_eq.sh" stop
   rm -f "$STATE_FILE"
 }
@@ -99,7 +99,7 @@ else
   args+=(--set media.popup.art drawing=off)
 fi
 
-sketchybar -m "${args[@]}" > /dev/null 2>&1
+sketchybar "${args[@]}" > /dev/null 2>&1
 
 # Only touch the animation loop on an actual state transition.
 if [ "$STATE" != "$PREV_STATE" ]; then

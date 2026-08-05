@@ -28,7 +28,7 @@ render() {
     esac
   fi
 
-  sketchybar --animate tanh 10 -m \
+  sketchybar --animate tanh 10 \
              --set volume icon="$icon" label="${volume}%" \
              --set volume.slider slider.percentage="$volume" > /dev/null 2>&1
 }

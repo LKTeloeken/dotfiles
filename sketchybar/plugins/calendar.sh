@@ -57,7 +57,7 @@ build() {
     i=$((i + 1))
   done <<< "$(cal)"
 
-  sketchybar -m "${args[@]}" > /dev/null 2>&1
+  sketchybar "${args[@]}" > /dev/null 2>&1
 }
 
 case "$1" in

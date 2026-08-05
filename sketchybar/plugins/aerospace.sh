@@ -23,4 +23,4 @@ for sid in $SPACE_SIDS; do
   args+=(--set space.$sid width=$width background.color="$color")
 done
 
-sketchybar --animate tanh 12 -m "${args[@]}" > /dev/null
+sketchybar --animate tanh 12 "${args[@]}" > /dev/null
