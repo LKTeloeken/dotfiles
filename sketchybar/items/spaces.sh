@@ -18,13 +18,18 @@ for sid in $SPACE_SIDS; do
                     click_script="aerospace workspace $sid"
 done
 
-# The rectangle behind the dots, same fill as the front_app pill.
+# The rectangle behind the dots, same fill as the front_app pill. Zero padding
+# so it hugs the dot row predictably: the outermost dots already contribute
+# SPACE_DOT_GAP of inner breathing room, and anything extra here eats into the
+# gap that separates the bracket from front_app.
 sketchybar --add bracket spaces '/space\..*/' \
            --set spaces background.drawing=on \
                         background.color="$SPACE_BRACKET_COLOR" \
                         background.border_width=$ITEM_BG_BORDER_WIDTH \
                         background.corner_radius=$ITEM_BG_CORNER_RADIUS \
-                        background.height=$ITEM_BG_HEIGHT
+                        background.height=$ITEM_BG_HEIGHT \
+                        background.padding_left=0 \
+                        background.padding_right=0
 
 # Invisible driver: updates every dot in a single batch. The update_freq covers
 # opening/closing windows, which aerospace does not emit an event for.

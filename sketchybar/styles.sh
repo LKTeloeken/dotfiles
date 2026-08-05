@@ -67,6 +67,11 @@ FONT_MONO_BOLD="Hack Nerd Font Mono:Bold:12.0"
 # Shared spacing and container style
 ITEM_PADDING_LEFT=4
 ITEM_PADDING_RIGHT=4
+# Visual gap between two adjacent pills: each neighbour contributes its own
+# padding, so ITEM_PADDING_LEFT + ITEM_PADDING_RIGHT. Items that sit next to a
+# bracket have to spend this on their own, because the bracket's background
+# already covers the padding of its outermost member.
+ITEM_GAP=$((ITEM_PADDING_LEFT + ITEM_PADDING_RIGHT))
 ITEM_ICON_PADDING_LEFT=8
 ITEM_ICON_PADDING_RIGHT=4
 ITEM_LABEL_PADDING_LEFT=6
