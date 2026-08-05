@@ -17,7 +17,7 @@ update() {
     TITLE="$(osascript -e "tell application \"$APP\" to name of current track" 2>/dev/null)"
     ARTIST="$(osascript -e "tell application \"$APP\" to artist of current track" 2>/dev/null)"
 
-    LABEL="$ARTIST - $TITLE"
+    LABEL="$TITLE - $ARTIST"
     if [ ${#LABEL} -gt 30 ]; then
       LABEL="$(echo "$LABEL" | cut -c1-27)..."
     fi

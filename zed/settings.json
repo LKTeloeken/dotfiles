@@ -7,14 +7,40 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "cli_default_open_behavior": "new_window",
+  "icon_theme": "Zed (Default)",
+  "scroll_sensitivity": 3.0,
+  "terminal": {
+    "scroll_multiplier": 1.0,
+  },
+  "edit_predictions": {
+    "provider": "copilot",
+  },
+  "project_panel": {
+    "dock": "left",
+  },
+  "outline_panel": {
+    "dock": "left",
+  },
+  "collaboration_panel": {
+    "dock": "left",
+  },
+  "git_panel": {
+    "tree_view": true,
+    "dock": "left",
+  },
   "agent": {
+    "sidebar_side": "right",
+    "dock": "right",
     "default_profile": "write",
     "default_model": {
+      "effort": "medium",
+      "enable_thinking": true,
       "provider": "copilot_chat",
-      "model": "claude-opus-4.5"
+      "model": "gpt-5.2-codex",
     },
     "favorite_models": [],
-    "model_parameters": []
+    "model_parameters": [],
   },
   "telemetry": {
     "diagnostics": true,
@@ -23,23 +49,24 @@
   "minimap": {
     "show": "never",
   },
-  "theme": "Min Dark (Blurred)",
+  "theme": {
+    "mode": "system",
+    "light": "One Light",
+    "dark": "Catppuccin Espresso (Blur) [Heavy]",
+  },
   "experimental.theme_overrides": {
     "background.appearance": "blurred",
-    "editor.background": "#00000000",
-    "editor.gutter.background": "#00000000",
+    // "editor.background": "#00000011",
+    // "editor.gutter.background": "#00000011",
   },
   "base_keymap": "VSCode",
   "ui_font_size": 16,
   "buffer_font_size": 13.0,
-  "buffer_font_family": "Fira Code",
+  "buffer_font_family": "Maple Mono NF",
   "preferred_line_length": 80,
   "buffer_line_height": "comfortable",
   "confirm_quit": false,
   "hover_popover_enabled": true,
-  "inlay_hints": {
-    "enabled": true,
-  },
   "git": {
     "git_gutter": "tracked_files",
   },
@@ -58,17 +85,38 @@
   },
   "languages": {
     "JavaScript": {
+      "language_servers": [
+        "vtsls",
+        "tailwindcss-language-server",
+        "!typescript-language-server",
+        "!eslint",
+        "...",
+      ],
       "code_actions_on_format": {
         "source.fixAll.eslint": true,
       },
     },
     "TypeScript": {
+      "language_servers": [
+        "vtsls",
+        "tailwindcss-language-server",
+        "!typescript-language-server",
+        "!eslint",
+        "...",
+      ],
       "code_actions_on_format": {
         "source.organizeImports": true,
         "source.fixAll.eslint": true,
       },
     },
     "TSX": {
+      "language_servers": [
+        "vtsls",
+        "tailwindcss-language-server",
+        "!typescript-language-server",
+        "!eslint",
+        "...",
+      ],
       "code_actions_on_format": {
         "source.organizeImports": true,
         "source.fixAll.eslint": true,
@@ -76,23 +124,35 @@
     },
   },
   "lsp": {
-    "typescript-language-server": {
-      "initialization_options": {
-        "preferences": {
-          "includeInlayParameterNameHints": "all",
-          "includeInlayParameterNameHintsWhenArgumentMatchesName": true,
-          "includeInlayFunctionParameterTypeHints": true,
-          "includeInlayVariableTypeHints": true,
-          "includeInlayVariableTypeHintsWhenTypeMatchesName": false,
-          "includeInlayPropertyDeclarationTypeHints": true,
-          "includeInlayFunctionLikeReturnTypeHints": true,
-          "includeInlayEnumMemberValueHints": true,
+    "vtsls": {
+      "settings": {
+        "typescript": {
+          "preferences": {
+            "preferTypeOnlyAutoImports": true,
+          },
+        },
+        "javascript": {
+          "preferences": {
+            "preferTypeOnlyAutoImports": true,
+          },
         },
       },
     },
     "tailwindcss-language-server": {
       "settings": {
-        "classAttributes": ["class", "className", "ngClass", "styles"],
+        "experimental": {
+          "classRegex": [
+            "\\.className\\s*[+]?=\\s*['\"]([^'\"]*)['\"]",
+            "\\.setAttributeNS\\(.*,\\s*['\"]class['\"],\\s*['\"]([^'\"]*)['\"]",
+            "\\.setAttribute\\(['\"]class['\"],\\s*['\"]([^'\"]*)['\"]",
+            "\\.classList\\.add\\(['\"]([^'\"]*)['\"]",
+            "\\.classList\\.remove\\(['\"]([^'\"]*)['\"]",
+            "\\.classList\\.toggle\\(['\"]([^'\"]*)['\"]",
+            "\\.classList\\.contains\\(['\"]([^'\"]*)['\"]",
+            "\\.classList\\.replace\\(\\s*['\"]([^'\"]*)['\"]",
+            "\\.classList\\.replace\\([^,)]+,\\s*['\"]([^'\"]*)['\"]",
+          ],
+        },
       },
     },
   },
@@ -108,6 +168,7 @@
     "**/out",
     "**/.next",
     "**/.turbo",
+    "**/build",
   ],
 
   "file_types": {

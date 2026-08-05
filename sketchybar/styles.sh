@@ -1,22 +1,22 @@
 #!/bin/sh
 
-# Pywal / Catppuccin Mocha palette
-if [ -f "$HOME/.cache/wal/colors.sh" ]; then
-  . "$HOME/.cache/wal/colors.sh"
+# Shared palette setup
+if [ -f "$HOME/.config/colors/setup.sh" ]; then
+  . "$HOME/.config/colors/setup.sh"
   COLOR_TRANSPARENT=0x00000000
-  COLOR_BASE="0xff${background:1}"
-  COLOR_MANTLE="0xff${color0:1}"
-  COLOR_SURFACE="0xff${color8:1}"
-  COLOR_PRIMARY="0xff${color4:1}"
-  COLOR_TEXT="0xff${foreground:1}"
-  COLOR_SUBTEXT="0xff${color7:1}"
-  COLOR_OVERLAY="0xff${color8:1}"
+  COLOR_BASE="0xff${BACKGROUND:1}"
+  COLOR_MANTLE="0xff${COLOR0:1}"
+  COLOR_SURFACE="0xff${COLOR8:1}"
+  COLOR_PRIMARY="0xff${COLOR4:1}"
+  COLOR_TEXT="0xff${FOREGROUND:1}"
+  COLOR_SUBTEXT="0xff${COLOR7:1}"
+  COLOR_OVERLAY="0xff${COLOR8:1}"
 
   # Opacity variants
-  COLOR_BASE_BG="0xcc${background:1}"
-  COLOR_SURFACE_BG="0xcc${color8:1}"
-  COLOR_PRIMARY_BG_SOFT="0x44${color4:1}"
-  COLOR_PRIMARY_BG_MEDIUM="0x88${color4:1}"
+  COLOR_BASE_BG="0xcc${BACKGROUND:1}"
+  COLOR_SURFACE_BG="0xcc${COLOR8:1}"
+  COLOR_PRIMARY_BG_SOFT="0x44${COLOR4:1}"
+  COLOR_PRIMARY_BG_MEDIUM="0x88${COLOR4:1}"
 else
   # Fallback: Catppuccin Mocha palette
   COLOR_TRANSPARENT=0x00000000

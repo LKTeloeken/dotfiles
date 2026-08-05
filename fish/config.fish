@@ -6,6 +6,10 @@ end
 
 set -U fish_greeting
 
+if test -f $HOME/.config/colors/setup.fish
+ source $HOME/.config/colors/setup.fish
+end
+
 starship init fish | source
 
 eval "$(/opt/homebrew/bin/brew shellenv)"

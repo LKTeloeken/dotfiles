@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-DOTFILES_DIR="${DOTFILES_DIR:-$HOME/Documents/projects/personal/dotfiles}"
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/projects/personal/dotfiles}"
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
 BACKUP_ROOT="${BACKUP_ROOT:-$HOME/.config-backups}"
 BACKUP_DIR="$BACKUP_ROOT/dotfiles-$TIMESTAMP"

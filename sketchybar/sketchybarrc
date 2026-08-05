@@ -62,46 +62,46 @@ source "$CONFIG_DIR/items/media.sh"
 # --- Items on the left ---
 SPACE_SIDS=(1 2 3 4 5 6)
 SPACE_LAST_INDEX=$((${#SPACE_SIDS[@]} - 1))
-for idx in "${!SPACE_SIDS[@]}"; do
-  sid="${SPACE_SIDS[$idx]}"
-  sketchybar --add item space.$sid left \
-             --subscribe space.$sid aerospace_workspace_change \
-             --set space.$sid \
-                    icon="" \
-                    label="" \
-                    width=$SPACE_SIZE_DEFAULT \
-                    padding_left=0 \
-                    padding_right=0 \
-                    icon.drawing=off \
-                    label.drawing=off \
-                    label.font="$FONT_SPACE_LABEL" \
-                    icon.font="$FONT_SPACE_ICON" \
-                    font_smoothing=on \
-                    label.y_offset=0 \
-                    label.padding_left=0 \
-                    label.padding_right=$SPACE_LABEL_PADDING_RIGHT \
-                    label.color="$SPACE_LABEL_COLOR" \
-                    icon.color="$SPACE_ICON_COLOR" \
-                    icon.padding_left=0 \
-                    icon.padding_right=0 \
-                    background.color="$SPACE_BG_COLOR" \
-                    background.border_width=0 \
-                    background.height=$SPACE_SIZE_DEFAULT \
-                    background.corner_radius=$SPACE_RADIUS_DEFAULT \
-                    click_script="aerospace workspace $sid" \
-                    script="$PLUGIN_DIR/space.sh $sid"
-
-  if [ "$idx" -lt "$SPACE_LAST_INDEX" ]; then
-    sketchybar --add item space_gap.$sid left \
-               --set space_gap.$sid \
-                      width=$SPACE_ITEM_GAP \
-                      padding_left=0 \
-                      padding_right=0 \
-                      icon.drawing=off \
-                      label.drawing=off \
-                      background.drawing=off
-  fi
-done
+# for idx in "${!SPACE_SIDS[@]}"; do
+#   sid="${SPACE_SIDS[$idx]}"
+#   sketchybar --add item space.$sid left \
+#              --subscribe space.$sid aerospace_workspace_change \
+#              --set space.$sid \
+#                     icon="" \
+#                     label="" \
+#                     width=$SPACE_SIZE_DEFAULT \
+#                     padding_left=0 \
+#                     padding_right=0 \
+#                     icon.drawing=off \
+#                     label.drawing=off \
+#                     label.font="$FONT_SPACE_LABEL" \
+#                     icon.font="$FONT_SPACE_ICON" \
+#                     font_smoothing=on \
+#                     label.y_offset=0 \
+#                     label.padding_left=0 \
+#                     label.padding_right=$SPACE_LABEL_PADDING_RIGHT \
+#                     label.color="$SPACE_LABEL_COLOR" \
+#                     icon.color="$SPACE_ICON_COLOR" \
+#                     icon.padding_left=0 \
+#                     icon.padding_right=0 \
+#                     background.color="$SPACE_BG_COLOR" \
+#                     background.border_width=0 \
+#                     background.height=$SPACE_SIZE_DEFAULT \
+#                     background.corner_radius=$SPACE_RADIUS_DEFAULT \
+#                     click_script="aerospace workspace $sid" \
+#                     script="$PLUGIN_DIR/space.sh $sid"
+#
+#   if [ "$idx" -lt "$SPACE_LAST_INDEX" ]; then
+#     sketchybar --add item space_gap.$sid left \
+#                --set space_gap.$sid \
+#                       width=$SPACE_ITEM_GAP \
+#                       padding_left=0 \
+#                       padding_right=0 \
+#                       icon.drawing=off \
+#                       label.drawing=off \
+#                       background.drawing=off
+#   fi
+# done
 
 # Front app
 sketchybar --add item front_app left \
