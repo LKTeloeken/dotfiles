@@ -1,3 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-sketchybar --animate tanh 10 --set $NAME label="$(date +'%a %d %b  -  %I:%M %p')"
+if [ "$SENDER" = "mouse.exited.global" ]; then
+  "$CONFIG_DIR/plugins/calendar.sh" close
+  exit 0
+fi
+
+sketchybar --animate tanh 10 --set "$NAME" label="$(date +'%a %d %b  -  %H:%M')"

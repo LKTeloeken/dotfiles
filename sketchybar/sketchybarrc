@@ -1,4 +1,7 @@
+#!/usr/bin/env bash
+
 PLUGIN_DIR="$CONFIG_DIR/plugins"
+ITEM_DIR="$CONFIG_DIR/items"
 source "$CONFIG_DIR/styles.sh"
 
 # General Bar Properties
@@ -27,90 +30,19 @@ sketchybar --default \
            background.border_width=$ITEM_BG_BORDER_WIDTH \
            background.corner_radius=$ITEM_BG_CORNER_RADIUS \
            background.height=$ITEM_BG_HEIGHT \
-           blur_radius=$BAR_BLUR_RADIUS 
+           blur_radius=$BAR_BLUR_RADIUS
 
+# Triggered by exec-on-workspace-change in ~/.aerospace.toml
 sketchybar --add event aerospace_workspace_change
-sketchybar --add event aerospace_mode_changed
-
-# --- Items on the right ---
-# Date and time
-sketchybar --add item date right \
-           --set date icon=􀧞 \
-                      icon.color="$DEFAULT_ICON_COLOR" \
-                      label.color="$CONTENT_LABEL_COLOR" \
-                       update_freq=5 \
-                      script="$PLUGIN_DIR/date.sh"
-
-# Battery level
-sketchybar --add item battery right \
-           --set battery icon.color="$DEFAULT_ICON_COLOR" \
-                         label.color="$CONTENT_LABEL_COLOR" \
-                         update_freq=10 \
-                         script="$PLUGIN_DIR/battery.sh" \
-           --subscribe battery system_woke power_source_change
-
-# Volume level
-sketchybar --add item volume right \
-           --set volume icon.color="$DEFAULT_ICON_COLOR" \
-                        label.color="$CONTENT_LABEL_COLOR" \
-                        script="$PLUGIN_DIR/volume.sh" \
-           --subscribe volume volume_change
-
-# Media (Spotify/Music)
-source "$CONFIG_DIR/items/media.sh"
 
 # --- Items on the left ---
-SPACE_SIDS=(1 2 3 4 5 6)
-SPACE_LAST_INDEX=$((${#SPACE_SIDS[@]} - 1))
-# for idx in "${!SPACE_SIDS[@]}"; do
-#   sid="${SPACE_SIDS[$idx]}"
-#   sketchybar --add item space.$sid left \
-#              --subscribe space.$sid aerospace_workspace_change \
-#              --set space.$sid \
-#                     icon="" \
-#                     label="" \
-#                     width=$SPACE_SIZE_DEFAULT \
-#                     padding_left=0 \
-#                     padding_right=0 \
-#                     icon.drawing=off \
-#                     label.drawing=off \
-#                     label.font="$FONT_SPACE_LABEL" \
-#                     icon.font="$FONT_SPACE_ICON" \
-#                     font_smoothing=on \
-#                     label.y_offset=0 \
-#                     label.padding_left=0 \
-#                     label.padding_right=$SPACE_LABEL_PADDING_RIGHT \
-#                     label.color="$SPACE_LABEL_COLOR" \
-#                     icon.color="$SPACE_ICON_COLOR" \
-#                     icon.padding_left=0 \
-#                     icon.padding_right=0 \
-#                     background.color="$SPACE_BG_COLOR" \
-#                     background.border_width=0 \
-#                     background.height=$SPACE_SIZE_DEFAULT \
-#                     background.corner_radius=$SPACE_RADIUS_DEFAULT \
-#                     click_script="aerospace workspace $sid" \
-#                     script="$PLUGIN_DIR/space.sh $sid"
-#
-#   if [ "$idx" -lt "$SPACE_LAST_INDEX" ]; then
-#     sketchybar --add item space_gap.$sid left \
-#                --set space_gap.$sid \
-#                       width=$SPACE_ITEM_GAP \
-#                       padding_left=0 \
-#                       padding_right=0 \
-#                       icon.drawing=off \
-#                       label.drawing=off \
-#                       background.drawing=off
-#   fi
-# done
+source "$ITEM_DIR/spaces.sh"
+source "$ITEM_DIR/front_app.sh"
 
-# Front app
-sketchybar --add item front_app left \
-           --set front_app icon.font="$FONT_FRONT_APP_ICON" \
-                           icon.color="$DEFAULT_ICON_COLOR" \
-                           label.color="$CONTENT_LABEL_COLOR" \
-                           background.color="$FRONT_APP_BACKGROUND_COLOR" \
-                           background.border_width=$ITEM_BG_BORDER_WIDTH \
-                           script="$PLUGIN_DIR/front_app.sh" \
-           --subscribe front_app front_app_switched
+# --- Items on the right (added right to left) ---
+source "$ITEM_DIR/date.sh"
+source "$ITEM_DIR/battery.sh"
+source "$ITEM_DIR/volume.sh"
+source "$ITEM_DIR/media.sh"
 
 sketchybar --update

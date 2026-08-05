@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 PERCENTAGE="$(pmset -g batt | grep -Eo "\d+%" | cut -d% -f1)"
 CHARGING="$(pmset -g batt | grep 'AC Power')"
@@ -20,7 +20,7 @@ case "${PERCENTAGE}" in
 [1-2][0-9])
   ICON="􀛩"
   ;;
-*) ICON="􀛪 " ;;
+*) ICON="􀛪" ;;
 esac
 
 if [[ "$CHARGING" != "" ]]; then
