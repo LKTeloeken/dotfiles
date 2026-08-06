@@ -82,12 +82,13 @@ ITEM_BG_HEIGHT=24
 
 # Workspace indicator dots, grouped inside a bracket
 SPACE_SIDS="1 2 3 4 5 6"
+SPACE_LAST_INDEX="6"
 SPACE_DOT_SIZE=10
 # Half of SPACE_DOT_SIZE, so an unfocused dot is a true circle.
 SPACE_DOT_RADIUS=5
 SPACE_DOT_FOCUSED_WIDTH=24
 # Applied to both sides, so the visible gap between dots is twice this.
-SPACE_DOT_GAP=7
+SPACE_DOT_GAP=5
 SPACE_BRACKET_COLOR="$FRONT_APP_BACKGROUND_COLOR"
 SPACE_DOT_COLOR_EMPTY="$COLOR_PRIMARY_BG_SOFT"
 SPACE_DOT_COLOR_ACTIVE="$COLOR_PRIMARY_BG_MEDIUM"
