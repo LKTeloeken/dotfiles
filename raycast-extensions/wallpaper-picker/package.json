@@ -1,0 +1,86 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "wallpaper-picker",
+  "title": "Wallpaper Picker",
+  "description": "Search wallhaven, preview wallpapers in a grid and apply one across every display, re-syncing the pywal palette.",
+  "icon": "icon.png",
+  "author": "lucasteloeken",
+  "platforms": ["macOS"],
+  "categories": ["Design Tools"],
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "search-wallpapers",
+      "title": "Search Wallpapers",
+      "subtitle": "wallhaven",
+      "description": "Search wallhaven and set the result as your wallpaper.",
+      "mode": "view"
+    }
+  ],
+  "preferences": [
+    {
+      "name": "dotfilesPath",
+      "type": "textfield",
+      "required": false,
+      "title": "Dotfiles Path",
+      "description": "Repository holding scripts/set_wallpaper.sh, which applies the wallpaper and re-syncs the palette.",
+      "default": "~/projects/personal/dotfiles"
+    },
+    {
+      "name": "wallpaperDir",
+      "type": "textfield",
+      "required": false,
+      "title": "Wallpaper Folder",
+      "description": "Where the full resolution downloads are kept. macOS references this file, so it must persist.",
+      "default": "~/Pictures/Wallpapers"
+    },
+    {
+      "name": "minResolution",
+      "type": "textfield",
+      "required": false,
+      "title": "Minimum Resolution",
+      "description": "Only show wallpapers at least this large.",
+      "default": "1920x1080"
+    },
+    {
+      "name": "columns",
+      "type": "dropdown",
+      "required": false,
+      "title": "Grid Columns",
+      "description": "How many wallpapers per row.",
+      "default": "4",
+      "data": [
+        { "title": "3", "value": "3" },
+        { "title": "4", "value": "4" },
+        { "title": "5", "value": "5" },
+        { "title": "6", "value": "6" }
+      ]
+    },
+    {
+      "name": "apiKey",
+      "type": "password",
+      "required": false,
+      "title": "Wallhaven API Key",
+      "description": "Optional. Only needed for restricted content and a higher rate limit."
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^1.104.0",
+    "@raycast/utils": "^1.19.1"
+  },
+  "devDependencies": {
+    "@raycast/eslint-config": "^2.0.4",
+    "@types/node": "22.13.10",
+    "@types/react": "19.0.10",
+    "eslint": "^9.22.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2"
+  },
+  "scripts": {
+    "build": "ray build",
+    "dev": "ray develop",
+    "fix-lint": "ray lint --fix",
+    "lint": "ray lint",
+    "publish": "npx @raycast/api@latest publish"
+  }
+}

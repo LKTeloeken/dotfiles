@@ -3,3 +3,6 @@ tmux/plugins
 
 raycast/extensions
 raycast/extensions_backup
+raycast-extensions/*/node_modules
+raycast-extensions/*/raycast-env.d.ts
+raycast-extensions/*/dist
