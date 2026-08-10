@@ -33,8 +33,13 @@ interface Preferences {
   apiKey: string;
   rating?: string;
   columns?: string;
+  fit?: string;
+  aspectRatio?: string;
   downloadDir?: string;
 }
+
+/** The subset of Grid.Props["aspectRatio"] offered in preferences. */
+type AspectRatio = "1" | "4/3" | "3/2" | "16/9";
 
 export const PAGE_SIZE = 25;
 /** GIPHY rejects an offset past this. */
@@ -45,7 +50,9 @@ export function getPreferences() {
   return {
     apiKey: prefs.apiKey?.trim() ?? "",
     rating: prefs.rating?.trim() || "g",
-    columns: prefs.columns?.trim() || "4",
+    columns: prefs.columns?.trim() || "3",
+    fit: prefs.fit?.trim() || "fill",
+    aspectRatio: (prefs.aspectRatio?.trim() || "1") as AspectRatio,
     downloadDir: prefs.downloadDir?.trim() || "~/Downloads",
   };
 }
@@ -79,15 +86,18 @@ export function hasMore(pagination: GiphyResponse["pagination"]): boolean {
 }
 
 /**
- * Renditions vary per GIF, so fall back through progressively heavier ones
- * rather than trusting a single key to exist.
+ * Renditions vary per GIF, so fall back through a chain rather than trusting a
+ * single key to exist. Ordered biggest-first: a grid cell is wider than the
+ * 200px `fixed_width` renditions, and upscaling those looks soft and small.
+ * `original` is last because it can weigh several MB, times 25 per page.
  */
 export function previewUrl(gif: Gif): string {
   const candidates = [
-    "fixed_width_downsampled",
-    "fixed_width",
-    "preview_gif",
+    "downsized_medium",
     "downsized",
+    "fixed_width",
+    "fixed_width_downsampled",
+    "preview_gif",
     "original",
   ];
   for (const name of candidates) {

@@ -16,7 +16,7 @@ import {
 
 export default function SearchGifs() {
   const [searchText, setSearchText] = useState("");
-  const { columns } = getPreferences();
+  const { columns, fit, aspectRatio } = getPreferences();
 
   const { isLoading, data, pagination } = useFetch(
     // A url-building function is what makes useFetch return the `pagination`
@@ -38,11 +38,12 @@ export default function SearchGifs() {
       isLoading={isLoading}
       pagination={pagination}
       columns={Number(columns)}
-      aspectRatio="16/9"
-      // Contain rather than Fill: GIFs come in wildly different shapes and
-      // cropping them hides the punchline.
-      fit={Grid.Fit.Contain}
-      inset={Grid.Inset.Small}
+      // Most GIPHY results are square-ish, so a 16/9 cell wasted almost half
+      // the width on empty bars. Configurable because the mix varies by search.
+      aspectRatio={aspectRatio}
+      fit={fit === "contain" ? Grid.Fit.Contain : Grid.Fit.Fill}
+      // Any inset is padding taken straight out of the GIF.
+      inset={Grid.Inset.Zero}
       searchText={searchText}
       onSearchTextChange={setSearchText}
       // GIPHY already filtered; local filtering would fight the pagination.

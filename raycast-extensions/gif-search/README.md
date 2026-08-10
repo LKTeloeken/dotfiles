@@ -41,8 +41,16 @@ Depois é só `⌃C`. A extensão fica registrada no Raycast permanentemente.
 
 ## Preferências
 
-Rating (`g`/`pg`/`pg-13`/`r`, padrão `g`), número de colunas do grid e pasta de download
-(padrão `~/Downloads`).
+Rating (`g`/`pg`/`pg-13`/`r`, padrão `g`), pasta de download (padrão `~/Downloads`) e três
+controles do tamanho do GIF no grid:
+
+| Preferência | Padrão | Efeito |
+|---|---|---|
+| **Grid Columns** | 3 | Menos colunas, células maiores |
+| **Cell Shape** | Square | Formato da célula; a maioria dos GIFs é quadrada |
+| **Scaling** | Fill | `Fill` ocupa a célula inteira e corta as bordas; `Contain` mostra o GIF todo, menor |
+
+Se os GIFs parecerem pequenos, mexa nessa ordem: colunas → shape → scaling.
 
 ## Notas
 

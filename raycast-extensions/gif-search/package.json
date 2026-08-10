@@ -44,13 +44,40 @@
       "type": "dropdown",
       "required": false,
       "title": "Grid Columns",
-      "description": "How many GIFs per row.",
-      "default": "4",
+      "description": "Fewer columns means bigger GIFs.",
+      "default": "3",
       "data": [
+        { "title": "2 (largest)", "value": "2" },
         { "title": "3", "value": "3" },
         { "title": "4", "value": "4" },
         { "title": "5", "value": "5" },
-        { "title": "6", "value": "6" }
+        { "title": "6 (smallest)", "value": "6" }
+      ]
+    },
+    {
+      "name": "aspectRatio",
+      "type": "dropdown",
+      "required": false,
+      "title": "Cell Shape",
+      "description": "Most GIFs are square-ish; a wider cell leaves empty bars around them.",
+      "default": "1",
+      "data": [
+        { "title": "Square", "value": "1" },
+        { "title": "4:3", "value": "4/3" },
+        { "title": "3:2", "value": "3/2" },
+        { "title": "16:9", "value": "16/9" }
+      ]
+    },
+    {
+      "name": "fit",
+      "type": "dropdown",
+      "required": false,
+      "title": "Scaling",
+      "description": "Fill uses the whole cell and crops the edges. Contain shows the whole GIF, smaller.",
+      "default": "fill",
+      "data": [
+        { "title": "Fill (bigger, crops)", "value": "fill" },
+        { "title": "Contain (whole GIF)", "value": "contain" }
       ]
     },
     {
