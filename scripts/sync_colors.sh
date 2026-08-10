@@ -2,6 +2,15 @@
 
 set -uo pipefail
 
+# GUI apps (Raycast, launchd agents) inherit a bare PATH of
+# /usr/bin:/bin:/usr/sbin:/sbin. Two things break silently without Homebrew on
+# it: pywal shells out to imagemagick and, when it is missing, writes no
+# colors.json at all while still exiting 0 -- so the palette falls back to
+# Catppuccin instead of the wallpaper's colors -- and `sketchybar --reload` at
+# the end is not found. Fixing PATH here covers every caller.
+PATH="/opt/homebrew/bin:/usr/local/bin:$HOME/.local/bin:$PATH"
+export PATH
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOTFILES_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 

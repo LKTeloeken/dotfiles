@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# Callable from a GUI app (the Raycast extension), which provides only a bare
+# PATH. See the note in sync_colors.sh for what that breaks.
+PATH="/opt/homebrew/bin:/usr/local/bin:$HOME/.local/bin:$PATH"
+export PATH
+
 usage() {
     echo "Usage: $0 [-y|--yes] <path_to_image>"
     echo "  -y, --yes   skip the preview and the confirmation prompt"
