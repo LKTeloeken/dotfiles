@@ -1,0 +1,84 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "gif-search",
+  "title": "GIF Search",
+  "description": "Search GIPHY, preview the results in a grid and paste, copy or download the one you pick.",
+  "icon": "icon.png",
+  "author": "lucasteloeken",
+  "platforms": ["macOS"],
+  "categories": ["Fun", "Media"],
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "search-gifs",
+      "title": "Search GIFs",
+      "subtitle": "GIPHY",
+      "description": "Search GIPHY and paste, copy or download a GIF.",
+      "mode": "view"
+    }
+  ],
+  "preferences": [
+    {
+      "name": "apiKey",
+      "type": "password",
+      "required": true,
+      "title": "GIPHY API Key",
+      "description": "Create one at https://developers.giphy.com/dashboard/. Raycast stores it in the keychain, so it never lands in the dotfiles repo."
+    },
+    {
+      "name": "rating",
+      "type": "dropdown",
+      "required": false,
+      "title": "Rating",
+      "description": "Highest content rating to include.",
+      "default": "g",
+      "data": [
+        { "title": "G", "value": "g" },
+        { "title": "PG", "value": "pg" },
+        { "title": "PG-13", "value": "pg-13" },
+        { "title": "R", "value": "r" }
+      ]
+    },
+    {
+      "name": "columns",
+      "type": "dropdown",
+      "required": false,
+      "title": "Grid Columns",
+      "description": "How many GIFs per row.",
+      "default": "4",
+      "data": [
+        { "title": "3", "value": "3" },
+        { "title": "4", "value": "4" },
+        { "title": "5", "value": "5" },
+        { "title": "6", "value": "6" }
+      ]
+    },
+    {
+      "name": "downloadDir",
+      "type": "textfield",
+      "required": false,
+      "title": "Download Folder",
+      "description": "Where the Download GIF action saves files.",
+      "default": "~/Downloads"
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^1.104.0",
+    "@raycast/utils": "^1.19.1"
+  },
+  "devDependencies": {
+    "@raycast/eslint-config": "^2.0.4",
+    "@types/node": "22.13.10",
+    "@types/react": "19.0.10",
+    "eslint": "^9.22.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2"
+  },
+  "scripts": {
+    "build": "ray build",
+    "dev": "ray develop",
+    "fix-lint": "ray lint --fix",
+    "lint": "ray lint",
+    "publish": "npx @raycast/api@latest publish"
+  }
+}
