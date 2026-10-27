@@ -100,7 +100,7 @@ local art = ui.add("item", "media.art", {
     corner_radius = ART_RADIUS,
     image = { scale = 0.5, corner_radius = ART_RADIUS },
   },
-  popup = ui.popup("center", "center"),
+  popup = ui.popup("left", "center"),
 })
 
 -- The pill behind the three items. Members are named explicitly so the popup
