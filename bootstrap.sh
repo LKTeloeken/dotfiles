@@ -54,6 +54,37 @@ link_item() {
   echo "Linked: $target -> $source"
 }
 
+# Copies a LaunchAgent plist (launchd does not reliably load symlinks) and
+# reloads it only when the installed copy is missing or outdated.
+install_launch_agent() {
+  local source="$1"
+  local label target domain
+  label="$(basename "$source" .plist)"
+  target="$HOME/Library/LaunchAgents/$label.plist"
+  domain="gui/$(id -u)"
+
+  if [[ ! -f "$source" ]]; then
+    echo "Skip (source not found): $source"
+    return
+  fi
+
+  if cmp -s "$source" "$target" && launchctl print "$domain/$label" >/dev/null 2>&1; then
+    echo "OK: $label already installed"
+    return
+  fi
+
+  mkdir -p "$(dirname "$target")"
+  # bootout returns before the job is gone; bootstrap fails until it is
+  launchctl bootout "$domain/$label" 2>/dev/null || true
+  for _ in {1..50}; do
+    launchctl print "$domain/$label" >/dev/null 2>&1 || break
+    sleep 0.1
+  done
+  cp "$source" "$target"
+  launchctl bootstrap "$domain" "$target"
+  echo "Installed: $label"
+}
+
 echo "Using dotfiles dir: $DOTFILES_DIR"
 
 # Files
@@ -74,6 +105,14 @@ link_item "$DOTFILES_DIR/tmux" "$HOME/.config/tmux"
 link_item "$DOTFILES_DIR/uv" "$HOME/.config/uv"
 link_item "$DOTFILES_DIR/yarn" "$HOME/.config/yarn"
 link_item "$DOTFILES_DIR/zed" "$HOME/.config/zed"
+
+# LaunchAgents
+SKETCHYBAR_BIN="$HOME/projects/personal/sketchybar/bin/sketchybar"
+if [[ ! -x "$SKETCHYBAR_BIN" ]]; then
+  echo "Warning: $SKETCHYBAR_BIN not found; clone LKTeloeken/SketchyBar"
+  echo "  (branch lucas/popup-rows-pressed) into ~/projects/personal and run make."
+fi
+install_launch_agent "$DOTFILES_DIR/sketchybar/launchd/com.lkteloeken.sketchybar.plist"
 
 if [[ "$BACKUP_CREATED" -eq 0 ]]; then
   echo "No backup needed."
