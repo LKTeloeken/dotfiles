@@ -108,13 +108,16 @@ POPUP_ICON_COLOR="$COLOR_PRIMARY"
 # Media widget
 MEDIA_ART_SIZE=18
 MEDIA_ART_RADIUS=4
-MEDIA_POPUP_ART_SIZE=140
+MEDIA_POPUP_ART_SIZE=124
 MEDIA_POPUP_ART_RADIUS=8
 # Left indent shared by every popup row, so the cover lines up with the text.
 POPUP_ROW_INDENT=12
-MEDIA_LABEL_MAX_CHARS=26
+MEDIA_LABEL_MAX_CHARS=22
 MEDIA_SCROLL_DURATION=180
 MEDIA_EQ_INTERVAL=0.18
+# Only these players show up in the widget. media-control reports whatever app
+# owns "Now Playing" (a browser tab included), so this keeps it to music apps.
+MEDIA_BUNDLES="com.apple.Music com.spotify.client"
 
 # Album art cache. Lives in /tmp so macOS clears it on boot; the prune rules
 # below are the safety net for long uptimes.

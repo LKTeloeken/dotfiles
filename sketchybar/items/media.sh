@@ -44,7 +44,6 @@ sketchybar --add item media.eq right \
 sketchybar --add item media.art right \
            --set media.art drawing=off \
                            updates=on \
-                           update_freq=2 \
                            label.drawing=off \
                            icon.drawing=off \
                            icon.font="$FONT_SF" \
@@ -129,3 +128,8 @@ sketchybar --add item media.popup.next popup.media.art \
                                   icon="􀊌" \
                                   label="Próxima" \
                                   click_script="$PLUGIN_DIR/media_click.sh next"
+
+# --- event source ---
+# No polling: a single media-control stream pushes changes to media.sh. Started
+# here so a `sketchybar --reload` replaces the old daemon instead of stacking.
+"$PLUGIN_DIR/media_stream.sh" start

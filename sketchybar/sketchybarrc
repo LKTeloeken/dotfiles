@@ -1,48 +1,73 @@
-#!/usr/bin/env bash
+#!/opt/homebrew/bin/lua
 
-PLUGIN_DIR="$CONFIG_DIR/plugins"
-ITEM_DIR="$CONFIG_DIR/items"
-source "$CONFIG_DIR/styles.sh"
+-- Entry point. Runs as one long-lived Lua process (SbarLua): items written in
+-- Lua get their events as callbacks over mach, with no process spawned per
+-- click, scroll or hover.
+--
+-- Absolute shebang: when aerospace starts the bar, PATH may not include
+-- Homebrew yet.
 
-# General Bar Properties
-sketchybar --bar position=top \
-               height=$BAR_HEIGHT \
-               blur_radius=$BAR_BLUR_RADIUS \
-               color=$COLOR_TRANSPARENT \
-               display=main \
-               topmost=window \
-               y_offset=$BAR_Y_OFFSET \
-               margin=$BAR_MARGIN
+package.cpath = package.cpath .. ";" .. os.getenv("HOME") .. "/.local/share/sketchybar_lua/?.so"
+package.path = package.path .. ";" .. os.getenv("CONFIG_DIR") .. "/lua/?.lua"
 
-# Item Defaults
-sketchybar --default \
-           padding_left=$ITEM_PADDING_LEFT \
-           padding_right=$ITEM_PADDING_RIGHT \
-           icon.font="$FONT_ICON_DEFAULT" \
-           label.font="$FONT_LABEL_DEFAULT" \
-           icon.color="$DEFAULT_ICON_COLOR" \
-           label.color="$DEFAULT_LABEL_COLOR" \
-           icon.padding_left=$ITEM_ICON_PADDING_LEFT \
-           icon.padding_right=$ITEM_ICON_PADDING_RIGHT \
-           label.padding_left=$ITEM_LABEL_PADDING_LEFT \
-           label.padding_right=$ITEM_LABEL_PADDING_RIGHT \
-           background.color="$DEFAULT_BACKGROUND_COLOR" \
-           background.border_width=$ITEM_BG_BORDER_WIDTH \
-           background.corner_radius=$ITEM_BG_CORNER_RADIUS \
-           background.height=$ITEM_BG_HEIGHT \
-           blur_radius=$BAR_BLUR_RADIUS
+sbar = require("sketchybar")
 
-# Triggered by exec-on-workspace-change in ~/.aerospace.toml
-sketchybar --add event aerospace_workspace_change
+local S = require("styles")
 
-# --- Items on the left ---
-source "$ITEM_DIR/spaces.sh"
-source "$ITEM_DIR/front_app.sh"
+sbar.bar({
+  position = "top",
+  height = S.num("BAR_HEIGHT"),
+  blur_radius = S.num("BAR_BLUR_RADIUS"),
+  color = S.COLOR_TRANSPARENT,
+  display = "main",
+  topmost = "window",
+  y_offset = S.num("BAR_Y_OFFSET"),
+  margin = S.num("BAR_MARGIN"),
+})
 
-# --- Items on the right (added right to left) ---
-source "$ITEM_DIR/date.sh"
-source "$ITEM_DIR/battery.sh"
-source "$ITEM_DIR/volume.sh"
-source "$ITEM_DIR/media.sh"
+sbar.default({
+  padding_left = S.num("ITEM_PADDING_LEFT"),
+  padding_right = S.num("ITEM_PADDING_RIGHT"),
+  icon = {
+    font = S.FONT_ICON_DEFAULT,
+    color = S.DEFAULT_ICON_COLOR,
+    padding_left = S.num("ITEM_ICON_PADDING_LEFT"),
+    padding_right = S.num("ITEM_ICON_PADDING_RIGHT"),
+  },
+  label = {
+    font = S.FONT_LABEL_DEFAULT,
+    color = S.DEFAULT_LABEL_COLOR,
+    padding_left = S.num("ITEM_LABEL_PADDING_LEFT"),
+    padding_right = S.num("ITEM_LABEL_PADDING_RIGHT"),
+  },
+  background = {
+    color = S.DEFAULT_BACKGROUND_COLOR,
+    border_width = S.num("ITEM_BG_BORDER_WIDTH"),
+    corner_radius = S.num("ITEM_BG_CORNER_RADIUS"),
+    height = S.num("ITEM_BG_HEIGHT"),
+  },
+  blur_radius = S.num("BAR_BLUR_RADIUS"),
+})
 
-sketchybar --update
+-- Triggered by exec-on-workspace-change in ~/.aerospace.toml
+sbar.add("event", "aerospace_workspace_change")
+
+-- Native helpers (helpers/Makefile): a no-op unless a source file changed.
+os.execute("make -s -C \"$CONFIG_DIR/helpers\" >/dev/null 2>&1")
+
+-- All items, sent to sketchybar as one batch. Right-side items are added
+-- right to left.
+sbar.begin_config()
+require("items.spaces")
+require("items.front_app")
+require("items.date")
+require("items.battery")
+require("items.wifi")
+-- Brightness widget (lua/items/brightness.lua): off for now, uncomment to use.
+-- require("items.brightness")
+require("items.volume")
+require("items.media")
+sbar.end_config()
+
+-- Never returns: from here on the process only reacts to events.
+sbar.event_loop()

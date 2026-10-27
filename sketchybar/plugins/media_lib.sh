@@ -1,77 +1,33 @@
 #!/usr/bin/env bash
 
-# Shared media helpers for media.sh / media_click.sh / media_eq.sh.
+# Shared media helpers for media.sh / media_stream.sh / media_click.sh.
 #
-# Everything here goes through AppleScript on purpose. The MediaRemote path
-# (sketchybar's media_change event, background.image=media.artwork and
-# nowplaying-cli) is deprecated on macOS 26 and returns null in practice, so it
-# cannot be used to read or to control playback.
+# Playback state comes from `media-control` (MediaRemote through a system perl),
+# never from AppleScript. AppleScript sends Apple Events to Music's main thread,
+# and polling it every 2s was making Music hang. media-control talks to
+# mediaremoted instead, so Music is never asked anything.
+# Install: see ~/projects/personal/media-control (reviewed local build).
 
-MEDIA_APPS="Music Spotify"
+# sketchybar is started by launchd with a bare PATH, so media-control (in
+# ~/.local/bin) and jq (Homebrew) would not be found. Same fix as scripts/*.sh.
+PATH="/opt/homebrew/bin:/usr/local/bin:$HOME/.local/bin:$PATH"
+export PATH
+
 # ASCII unit separator: safe field delimiter, cannot appear in a track name.
 MEDIA_DELIM=$'\x1f'
 
-# Echoes "app<US>state<US>title<US>artist<US>album" for the first running player
-# that has a track loaded. State and track come back in one osascript round trip
-# because this runs on the poll path, where each round trip costs ~150ms.
-media_poll() {
-  local app raw state
-  for app in $MEDIA_APPS; do
-    pgrep -x "$app" > /dev/null 2>&1 || continue
-
-    raw="$(osascript 2> /dev/null <<EOF
-set d to (ASCII character 31)
-try
-  tell application "$app"
-    set s to player state as text
-    set t to name of current track
-    set a to artist of current track
-    set al to album of current track
-  end tell
-  return s & d & t & d & a & d & al
-on error
-  return ""
-end try
-EOF
-)"
-
-    state="${raw%%"$MEDIA_DELIM"*}"
-    case "$state" in
-      playing | paused) printf '%s%s%s\n' "$app" "$MEDIA_DELIM" "$raw"; return 0 ;;
-    esac
-  done
+# Succeeds when bundle id $1 is one of the players the widget is allowed to show.
+media_bundle_allowed() {
+  case " ${MEDIA_BUNDLES:-com.apple.Music com.spotify.client} " in
+    *" $1 "*) return 0 ;;
+  esac
   return 1
 }
 
-# Writes the current track's cover art to \$2. Returns non-zero when there is
-# no art to extract.
+# Writes the current track's cover art to $1. Returns non-zero when there is no
+# art (yet): MediaRemote often publishes the title before the artwork.
 media_extract_art() {
-  local app="$1" out="$2" url
-
-  if [ "$app" = "Spotify" ]; then
-    # Spotify exposes a plain https URL instead of raw bytes.
-    # NOTE: untested — Spotify is not installed on this machine.
-    url="$(osascript -e 'tell application "Spotify" to artwork url of current track' 2>/dev/null)"
-    [ -n "$url" ] || return 1
-    curl -sfL --max-time 5 -o "$out" "$url" || return 1
-  else
-    osascript > /dev/null 2>&1 <<EOF || return 1
-try
-  tell application "$app"
-    set d to raw data of artwork 1 of current track
-  end tell
-  set f to open for access POSIX file "$out" with write permission
-  set eof f to 0
-  write d to f
-  close access f
-on error
-  try
-    close access f
-  end try
-  error "no artwork"
-end try
-EOF
-  fi
-
+  local out="$1"
+  media-control get 2> /dev/null | jq -r '.artworkData // empty' | base64 -D > "$out" 2> /dev/null
   [ -s "$out" ]
 }
