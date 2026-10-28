@@ -114,6 +114,18 @@ if [[ ! -x "$SKETCHYBAR_BIN" ]]; then
 fi
 install_launch_agent "$DOTFILES_DIR/sketchybar/launchd/com.lkteloeken.sketchybar.plist"
 
+# Apps
+if ! command -v brew >/dev/null 2>&1; then
+  echo "Skip (brew not found): scroll-fix"
+elif brew list --cask scroll-fix >/dev/null 2>&1; then
+  echo "OK: scroll-fix already installed"
+else
+  brew tap LKTeloeken/scroll-fix https://github.com/LKTeloeken/scroll-fix
+  brew trust lkteloeken/scroll-fix
+  brew install --cask scroll-fix
+  echo "Installed: scroll-fix (allow it in Privacy & Security -> Accessibility)"
+fi
+
 if [[ "$BACKUP_CREATED" -eq 0 ]]; then
   echo "No backup needed."
 fi
