@@ -5,8 +5,12 @@
   "description": "Search wallhaven, preview wallpapers in a grid and apply one across every display, re-syncing the pywal palette.",
   "icon": "icon.png",
   "author": "lucasteloeken",
-  "platforms": ["macOS"],
-  "categories": ["Design Tools"],
+  "platforms": [
+    "macOS"
+  ],
+  "categories": [
+    "Design Tools"
+  ],
   "license": "MIT",
   "commands": [
     {
@@ -50,10 +54,22 @@
       "description": "How many wallpapers per row.",
       "default": "4",
       "data": [
-        { "title": "3", "value": "3" },
-        { "title": "4", "value": "4" },
-        { "title": "5", "value": "5" },
-        { "title": "6", "value": "6" }
+        {
+          "title": "3",
+          "value": "3"
+        },
+        {
+          "title": "4",
+          "value": "4"
+        },
+        {
+          "title": "5",
+          "value": "5"
+        },
+        {
+          "title": "6",
+          "value": "6"
+        }
       ]
     },
     {
@@ -65,8 +81,8 @@
     }
   ],
   "dependencies": {
-    "@raycast/api": "^1.104.0",
-    "@raycast/utils": "^1.19.1"
+    "@raycast/api": "^2.4.1",
+    "@raycast/utils": "^2.3.1"
   },
   "devDependencies": {
     "@raycast/eslint-config": "^2.0.4",
