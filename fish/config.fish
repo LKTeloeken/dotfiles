@@ -1,3 +1,6 @@
+# First: everything below (fastfetch, starship, zoxide) comes from Homebrew
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
 if status is-interactive
     # Commands to run in interactive sessions can go here
 
@@ -12,9 +15,12 @@ end
 
 starship init fish | source
 
-eval "$(/opt/homebrew/bin/brew shellenv)"
+# Global, not universal: fish_variables is machine-local and not in git
+fish_add_path -g $HOME/go/bin /Applications/Ghostty.app/Contents/MacOS
 
-source $HOME/.local/bin/env.fish 
+if test -f $HOME/.local/bin/env.fish
+ source $HOME/.local/bin/env.fish
+end
 
 zoxide init fish | source
 fzf --fish | source
