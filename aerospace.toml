@@ -8,14 +8,14 @@ start-at-login = true
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
 
-# sketchybar is started (and restarted on crash) by the LaunchAgent in
-# sketchybar/launchd/, using the forked build.
+# sketchybar is started (and restarted on crash) by `brew services`, using the
+# forked build from lkteloeken/tap (see bootstrap.sh).
 after-startup-command = []
 
 exec-on-workspace-change = [
     '/bin/bash',
     '-c',
-    '/Users/lucasteloeken/projects/personal/sketchybar/bin/sketchybar --trigger aerospace_workspace_change AEROSPACE_FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE AEROSPACE_PREV_WORKSPACE=$AEROSPACE_PREV_WORKSPACE',
+    '/opt/homebrew/bin/sketchybar --trigger aerospace_workspace_change AEROSPACE_FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE AEROSPACE_PREV_WORKSPACE=$AEROSPACE_PREV_WORKSPACE',
 ]
 
 # See: https://nikitabobko.github.io/AeroSpace/guide#layouts
