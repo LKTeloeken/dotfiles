@@ -314,7 +314,6 @@ module_notifyq() {
 
 module_configs() {
   brew_install btop
-  cask_install zed /Applications/Zed.app
   cask_install raycast /Applications/Raycast.app
   link_item "$DOTFILES_DIR/btop" "$HOME/.config/btop"
   link_item "$DOTFILES_DIR/uv" "$HOME/.config/uv"
