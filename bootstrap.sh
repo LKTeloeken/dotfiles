@@ -28,6 +28,7 @@ MODULES=(
   colors     "pywal colors from the current wallpaper"
   scroll-fix "ScrollFix (natural scrolling per device)"
   notifyq    "notifyq notifications CLI and daemon"
+  vscode     "VS Code settings, Islands theme fork and Custom UI Style"
   configs    "btop, uv, yarn, zed, opencode and Raycast configs"
 )
 
@@ -339,6 +340,30 @@ module_notifyq() {
   else
     "$HOME/.local/bin/notifyq" daemon install
   fi
+}
+
+module_vscode() {
+  cask_install visual-studio-code "/Applications/Visual Studio Code.app"
+  brew_install jq
+  local code_bin="/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code"
+  local user_dir="$HOME/Library/Application Support/Code/User"
+
+  link_item "$DOTFILES_DIR/vscode/settings.json" "$user_dir/settings.json"
+  link_item "$DOTFILES_DIR/vscode/keybindings.json" "$user_dir/keybindings.json"
+
+  # The theme is a symlinked folder; VS Code registers it on its next start.
+  clone_repo LKTeloeken/vscode-dark-islands "$PROJECTS_DIR/vscode-dark-islands"
+  local version
+  version="$(jq -r .version "$PROJECTS_DIR/vscode-dark-islands/package.json")"
+  link_item "$PROJECTS_DIR/vscode-dark-islands" "$HOME/.vscode/extensions/lkteloeken.islands-dark-$version"
+
+  # Injects islands.css (see custom-ui-style.external.imports in settings.json)
+  if "$code_bin" --list-extensions | grep -qx subframe7536.custom-ui-style; then
+    echo "OK: Custom UI Style already installed"
+  else
+    "$code_bin" --install-extension subframe7536.custom-ui-style
+  fi
+  echo "In VS Code, run \"Custom UI Style: Reload\" once to apply the panels"
 }
 
 module_configs() {
