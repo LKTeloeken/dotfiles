@@ -1,8 +1,8 @@
 # Place a copy of this config to ~/.aerospace.toml
 # After that, you can edit ~/.aerospace.toml to your liking
 
-# Not started at login: Rift is the window manager now
-start-at-login = false
+# Start AeroSpace at login (turn off when switching to Rift, see sketchybar/lua/wm.lua)
+start-at-login = true
 
 # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
 enable-normalization-flatten-containers = true

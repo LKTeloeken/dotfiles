@@ -49,9 +49,8 @@ sbar.default({
   blur_radius = S.num("BAR_BLUR_RADIUS"),
 })
 
--- Triggered by run_on_start in ~/.config/rift/config.toml
-sbar.add("event", "rift_workspace_changed")
-sbar.add("event", "rift_windows_changed")
+-- Events the active window manager triggers (lua/wm.lua picks aerospace or rift)
+for _, event in ipairs(require("wm").events) do sbar.add("event", event) end
 
 -- Native helpers (helpers/Makefile): a no-op unless a source file changed.
 os.execute("make -s -C \"$CONFIG_DIR/helpers\" >/dev/null 2>&1")
@@ -63,7 +62,8 @@ require("items.spaces")
 require("items.front_app")
 require("items.date")
 require("items.battery")
-require("items.wifi")
+-- Wi-Fi widget (lua/items/wifi.lua): off for now, uncomment to use.
+-- require("items.wifi")
 -- Brightness widget (lua/items/brightness.lua): off for now, uncomment to use.
 -- require("items.brightness")
 require("items.volume")

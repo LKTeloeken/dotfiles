@@ -1,8 +1,9 @@
--- One dot per rift workspace, wrapped in a pill. Workspaces with windows
+-- One dot per workspace of the active window manager (lua/wm.lua), wrapped in a pill. Workspaces with windows
 -- get a stronger dot, the focused one is wider. Clicking a dot switches to it.
 
 local S = require("styles")
 local ui = require("ui")
+local wm = require("wm")
 
 local DOT = S.num("SPACE_DOT_SIZE")
 local GAP = S.num("SPACE_DOT_GAP")
@@ -12,10 +13,6 @@ for sid in S.SPACE_SIDS:gmatch("%S+") do sids[#sids + 1] = sid end
 
 local dots = {}
 local names = {}
-
--- rift-cli switches by zero-based index, the bar shows workspace names. Filled
--- from every query; until the first one, assume names in order from "1".
-local index_of = {}
 
 for i, sid in ipairs(sids) do
   local dot = ui.add("item", "space." .. sid, {
@@ -34,8 +31,8 @@ for i, sid in ipairs(sids) do
     },
   })
   ui.on(dot, "mouse.clicked", function()
-    local index = index_of[sid] or (tonumber(sid) and tonumber(sid) - 1)
-    if index then ui.exec("rift-cli execute workspace switch " .. index) end
+    local cmd = wm.switch(sid)
+    if cmd then ui.exec(cmd) end
   end)
   dots[sid] = dot
   names[#names + 1] = dot.name
@@ -89,32 +86,19 @@ local function paint(focused, non_empty)
   end)
 end
 
--- One query answers both questions. sbar.exec hands back rift's JSON already
--- decoded: a list of { index, name, is_focused, window_count, ... }.
-local function refresh()
-  ui.exec("rift-cli query workspaces", function(workspaces)
-    if type(workspaces) ~= "table" then return end
-    local focused, non_empty = nil, {}
-    for _, ws in ipairs(workspaces) do
-      index_of[ws.name] = ws.index
-      if ws.is_focused then focused = ws.name end
-      if (ws.window_count or 0) > 0 then non_empty[ws.name] = true end
-    end
-    paint(focused, non_empty)
-  end)
+local function refresh(env)
+  wm.query(env, paint)
 end
 
--- Invisible driver. rift emits events for workspace switches and for windows
--- opening or closing (run_on_start in rift/config.toml). The slow routine
--- paints the first state at startup and covers a missed event.
+-- Invisible driver: the WM's events cover what it reports, update_freq polls
+-- for the rest (see lua/wm.lua).
 local observer = ui.add("item", "spaces_observer", {
   position = "left",
   drawing = false,
   updates = true,
-  update_freq = 30,
+  update_freq = wm.update_freq,
 })
 
-ui.on(observer,
-  { "routine", "forced", "rift_workspace_changed", "rift_windows_changed", "front_app_switched" },
-  refresh
-)
+local events = { "routine", "forced", "front_app_switched" }
+for _, event in ipairs(wm.events) do events[#events + 1] = event end
+ui.on(observer, events, refresh)
