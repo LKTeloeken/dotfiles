@@ -1,0 +1,147 @@
+# Linked to ~/.config/rift/config.toml (see bootstrap.sh).
+# Reference: https://acsandmann.github.io/rift-docs/reference/configuration/
+
+[settings]
+animate = true
+animation_duration = 0.2
+# Must be positive on 0.7.2 (0.0 = display rate only exists on main)
+animation_fps = 120.0
+
+# Rift's default leaves every Space unmanaged until toggled.
+default_disable = false
+
+focus_follows_mouse = false
+mouse_follows_focus = true
+mouse_hides_on_focus = false
+
+# Feed sketchybar (lua/items/spaces.lua). Entries only run when rift starts:
+# restart the service after changing them.
+# The event JSON is appended as the last argument; under sh -c it lands in $0
+# and is ignored, since the bar queries rift itself.
+run_on_start = [
+  "/opt/homebrew/bin/rift-cli subscribe cli --event workspace_changed --command /bin/sh --args -c --args '/opt/homebrew/bin/sketchybar --trigger rift_workspace_changed'",
+  "/opt/homebrew/bin/rift-cli subscribe cli --event windows_changed --command /bin/sh --args -c --args '/opt/homebrew/bin/sketchybar --trigger rift_windows_changed'",
+]
+
+hot_reload = true
+
+[settings.layout]
+mode = "traditional"
+window_insertion_point = "next_to_selection"
+
+[settings.layout.traditional]
+equalize_nodes = true
+
+[settings.layout.stack]
+# Accordion without padding, like aerospace's accordion-padding = 0
+stack_offset = 0.0
+default_orientation = "perpendicular"
+
+[settings.layout.gaps.outer]
+top = 45
+left = 8
+bottom = 8
+right = 8
+
+[settings.layout.gaps.inner]
+horizontal = 8
+vertical = 8
+
+# Built-in display: the bar sits in the notch area, so less room on top.
+[settings.layout.gaps.per_display."37D8832A-2D66-02CA-B9F7-8F30A301B230".outer]
+top = 15
+left = 8
+bottom = 8
+right = 8
+
+[settings.ui.menu_bar]
+enabled = false
+
+[virtual_workspaces]
+# Workspaces are shared across displays, so they can be pinned to one.
+mode = "global"
+enabled = true
+default_workspace_count = 11
+auto_assign_windows = true
+preserve_focus_per_workspace = true
+workspace_auto_back_and_forth = false
+prevent_wrapping = false
+
+# Same ids as the old aerospace workspaces; sketchybar matches on them.
+workspace_names = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "t"]
+
+workspace_rules = [
+  { workspace = 0, display = "LF24T35" },
+  { workspace = 1, display = "LF24T35" },
+  { workspace = 2, display = "LF24T35" },
+  { workspace = 3, display = "builtin" },
+  { workspace = 4, display = "builtin" },
+  { workspace = 5, display = "builtin" },
+]
+
+app_rules = [
+  { app_id = "com.mitchellh.ghostty", floating = false },
+]
+
+[keys]
+"Alt + Slash" = "toggle_orientation"
+"Alt + Comma" = "toggle_stack"
+
+"Alt + H" = { move_focus = "left" }
+"Alt + J" = { move_focus = "down" }
+"Alt + K" = { move_focus = "up" }
+"Alt + L" = { move_focus = "right" }
+
+"Alt + Shift + H" = { move_node = "left" }
+"Alt + Shift + J" = { move_node = "down" }
+"Alt + Shift + K" = { move_node = "up" }
+"Alt + Shift + L" = { move_node = "right" }
+
+"Alt + Minus" = { resize_window_shrink = "smart" }
+"Alt + Equal" = { resize_window_grow = "smart" }
+
+# Workspace indices are zero-based: index 3 is the workspace named "4".
+"Alt + 1" = { switch_to_workspace = 0 }
+"Alt + 2" = { switch_to_workspace = 1 }
+"Alt + 3" = { switch_to_workspace = 2 }
+"Alt + Q" = { switch_to_workspace = 3 }
+"Alt + W" = { switch_to_workspace = 4 }
+"Alt + E" = { switch_to_workspace = 5 }
+"Alt + 7" = { switch_to_workspace = 6 }
+"Alt + 8" = { switch_to_workspace = 7 }
+"Alt + 9" = { switch_to_workspace = 8 }
+"Alt + 0" = { switch_to_workspace = 9 }
+"Alt + T" = { switch_to_workspace = 10 }
+
+"Alt + Shift + 1" = { move_window_to_workspace = { workspace = 0, follow = true } }
+"Alt + Shift + 2" = { move_window_to_workspace = { workspace = 1, follow = true } }
+"Alt + Shift + 3" = { move_window_to_workspace = { workspace = 2, follow = true } }
+"Alt + Shift + Q" = { move_window_to_workspace = { workspace = 3, follow = true } }
+"Alt + Shift + W" = { move_window_to_workspace = { workspace = 4, follow = true } }
+"Alt + Shift + E" = { move_window_to_workspace = { workspace = 5, follow = true } }
+"Alt + Shift + 7" = { move_window_to_workspace = { workspace = 6, follow = true } }
+"Alt + Shift + 8" = { move_window_to_workspace = { workspace = 7, follow = true } }
+"Alt + Shift + 9" = { move_window_to_workspace = { workspace = 8, follow = true } }
+"Alt + Shift + 0" = { move_window_to_workspace = { workspace = 9, follow = true } }
+"Alt + Shift + T" = { move_window_to_workspace = { workspace = 10, follow = true } }
+
+"Alt + Tab" = "switch_to_last_workspace"
+"Alt + Shift + Tab" = { move_workspace_to_display = { selector = "right", wrap_around = true } }
+
+"Alt + Shift + Semicolon" = { binding_mode = "service" }
+
+"Alt + Shift + F" = "toggle_fullscreen_within_gaps"
+
+# Cycle through windows in fullscreen. A script, since rift only has a toggle
+# and a fixed toggle/next/toggle chain flips each window's state blindly.
+"Alt + Shift + S" = { exec = ["/bin/sh", "-c", "$HOME/projects/personal/dotfiles/scripts/rift-fullscreen-next.sh"] }
+
+# Keep all [keys] entries above this point: later entries belong to the mode.
+[binding_modes.service]
+"Escape" = ["reload_config", { binding_mode = "default" }]
+"F" = ["toggle_window_floating", { binding_mode = "default" }]
+
+"Alt + Shift + H" = [{ join_window = "left" }, { binding_mode = "default" }]
+"Alt + Shift + J" = [{ join_window = "down" }, { binding_mode = "default" }]
+"Alt + Shift + K" = [{ join_window = "up" }, { binding_mode = "default" }]
+"Alt + Shift + L" = [{ join_window = "right" }, { binding_mode = "default" }]

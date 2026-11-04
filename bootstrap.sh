@@ -22,6 +22,7 @@ MODULES=(
   tmux       "tmux, its config and plugins (tpm)"
   nvim       "Neovim config and plugins"
   aerospace  "AeroSpace window manager"
+  rift       "Rift window manager as Rift.app, signed with the local certificate"
   borders    "JankyBorders, as a brew service"
   sketchybar "SketchyBar fork, SbarLua and its config, as a brew service"
   colors     "pywal colors from the current wallpaper"
@@ -238,6 +239,34 @@ module_aerospace() {
   brew_tap nikitabobko/tap
   cask_install nikitabobko/tap/aerospace /Applications/AeroSpace.app
   link_item "$DOTFILES_DIR/aerospace.toml" "$HOME/.aerospace.toml"
+}
+
+# Signs Rift.app with a local certificate so its Accessibility permission
+# survives upgrades (see lkteloeken/tap/rift). Run again after `brew upgrade`.
+module_rift() {
+  brew_tap lkteloeken/tap
+  brew_install lkteloeken/tap/rift
+  local identity="${RIFT_SIGN_IDENTITY:-Local Code Signing}"
+  local app
+  app="$(brew --prefix lkteloeken/tap/rift)/Rift.app"
+  # opt/ always points at the current version, so the link survives upgrades
+  link_item "$app" "/Applications/Rift.app"
+  link_item "$DOTFILES_DIR/rift/config.toml" "$HOME/.config/rift/config.toml"
+
+  if ! security find-certificate -c "$identity" >/dev/null 2>&1; then
+    echo "Skip signing: no \"$identity\" certificate. Create it in Keychain Access >"
+    echo "Certificate Assistant > Create a Certificate (type: Code Signing), then run this again."
+    return
+  fi
+  # Captured first: under pipefail, grep -q closing the pipe early fails codesign
+  local signature
+  signature="$(codesign -dvv "$app" 2>&1 || true)"
+  if grep -qx "Authority=$identity" <<<"$signature"; then
+    echo "OK: Rift.app already signed with $identity"
+  else
+    codesign --force --sign "$identity" "$app"
+    echo "Signed: Rift.app with $identity"
+  fi
 }
 
 module_borders() {

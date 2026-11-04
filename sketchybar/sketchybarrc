@@ -4,8 +4,8 @@
 -- Lua get their events as callbacks over mach, with no process spawned per
 -- click, scroll or hover.
 --
--- Absolute shebang: when aerospace starts the bar, PATH may not include
--- Homebrew yet.
+-- Absolute shebang: launchd starts the bar with a bare PATH, which may not
+-- include Homebrew yet.
 
 package.cpath = package.cpath .. ";" .. os.getenv("HOME") .. "/.local/share/sketchybar_lua/?.so"
 package.path = package.path .. ";" .. os.getenv("CONFIG_DIR") .. "/lua/?.lua"
@@ -49,8 +49,9 @@ sbar.default({
   blur_radius = S.num("BAR_BLUR_RADIUS"),
 })
 
--- Triggered by exec-on-workspace-change in ~/.aerospace.toml
-sbar.add("event", "aerospace_workspace_change")
+-- Triggered by run_on_start in ~/.config/rift/config.toml
+sbar.add("event", "rift_workspace_changed")
+sbar.add("event", "rift_windows_changed")
 
 -- Native helpers (helpers/Makefile): a no-op unless a source file changed.
 os.execute("make -s -C \"$CONFIG_DIR/helpers\" >/dev/null 2>&1")
