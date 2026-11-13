@@ -1,0 +1,11 @@
+{
+  "skills": {
+    "personal/i-have-adhd": {
+      "url": "https://github.com/ayghri/i-have-adhd",
+      "sha": "1ecea1993b7fce257ffbd686c070948b5e07eda6",
+      "subpath": "skills/i-have-adhd",
+      "treeSha256": "9e1b4dc22cd29ec73a50f7c21b1a0c828d9d58dbc57b06d7d5cfc1f0f41918a3",
+      "installedAt": "2026-11-13T03:09:18Z"
+    }
+  }
+}

@@ -39,6 +39,11 @@ alias ls="eza --color=always --long --git --no-filesize --icons=always --no-time
 
 
 
+# Claude Code accounts: plain `claude` is the first personal one. Each alias has its
+# own config dir and its own login.
+alias claude-isa="env CLAUDE_CONFIG_DIR=$HOME/.claude-isa claude"
+alias claude-work="env CLAUDE_CONFIG_DIR=$HOME/.claude-work claude"
+
 # Aliases for python
 alias uv_run="uv run manage.py runserver 0.0.0.0:8000"
 alias uv_migrate="uv run manage.py migrate_schemas"

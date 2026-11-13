@@ -29,6 +29,7 @@ MODULES=(
   scroll-fix "ScrollFix (natural scrolling per device)"
   notifyq    "notifyq notifications CLI and daemon"
   vscode     "VS Code settings, Islands theme fork and Custom UI Style"
+  claude     "Claude Code profiles: default and isa (personal, shared sessions) and work"
   configs    "btop, uv, yarn, zed, opencode and Raycast configs"
 )
 
@@ -364,6 +365,43 @@ module_vscode() {
     "$code_bin" --install-extension subframe7536.custom-ui-style
   fi
   echo "In VS Code, run \"Custom UI Style: Reload\" once to apply the panels"
+}
+
+# Links the versioned Claude Code files into one config dir. Skills, agents and
+# commands are linked one by one so app-managed entries (skills/synced) stay local.
+link_claude_profile() {
+  local profile="$1"
+  local config_dir="$2"
+  local source_dir="$DOTFILES_DIR/claude/$profile"
+  local item entry
+
+  mkdir -p "$config_dir"
+  for item in CLAUDE.md settings.json; do
+    link_item "$source_dir/$item" "$config_dir/$item"
+  done
+  for item in skills agents commands; do
+    [[ -d "$source_dir/$item" ]] || continue
+    mkdir -p "$config_dir/$item"
+    for entry in "$source_dir/$item"/*; do
+      [[ -e "$entry" ]] || continue
+      link_item "$entry" "$config_dir/$item/$(basename "$entry")"
+    done
+  done
+}
+
+module_claude() {
+  # Accounts are separate logins, one per config dir (see the claude-* aliases
+  # in fish/config.fish). Run /login once in each.
+  link_claude_profile personal "$HOME/.claude"
+  link_claude_profile personal "$HOME/.claude-isa"
+  link_claude_profile work "$HOME/.claude-work"
+
+  # The two personal accounts share sessions, memory and history through ~/.claude
+  local item
+  for item in projects file-history plans history.jsonl; do
+    [[ -e "$HOME/.claude/$item" ]] || mkdir -p "$HOME/.claude/$item"
+    link_item "$HOME/.claude/$item" "$HOME/.claude-isa/$item"
+  done
 }
 
 module_configs() {
